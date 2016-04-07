@@ -1,0 +1,6 @@
+{
+    "dotnet": {
+        "projects": "src/*/project.json",
+        "enablePackageRestore": false
+    }
+}
