@@ -1,6 +1,6 @@
 {
-    "version": "1.0.0-rc2-010000",
     "compilationOptions": {
+    "version": "1.0.0-preview2-*",
         "emitEntryPoint": true
     },
 
