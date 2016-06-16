@@ -1,18 +1,80 @@
+$global:testSuite = @{}
+
+# test helper
+
+function Run-Test {
+  Param([string] $Name, [scriptblock] $Check)
+  
+  Write-Host "## Testing $Name..."  -ForegroundColor "magenta"
+  try {
+    $Check.Invoke()
+    Write-Host "## Testing $Name [OK]"  -ForegroundColor "green"
+    $global:testSuite.Add($Name, $TRUE)
+  }
+  catch {
+    Write-Host "## Testing $Name [FAILED]"  -ForegroundColor "red"
+    Write-Host $_.Exception.Message
+    $global:testSuite.Add($Name, $FALSE)
+  }
+}
+
+function Dotnet-Build {
+  Run-Cmd "dotnet" "--verbose build"
+}
+
+function Dotnet-Run {
+  Param([string] $Arguments)
+
+  Run-Cmd "dotnet" "--verbose run $Arguments"
+}
+
 # dotnet new
 
+Run-Test "dotnet new" {
 
-Write-Host "## Testing dotnet new..."  -foregroundcolor "magenta"
+  Remove-Item "$rootDir\test\test-dotnet-new" -Recurse -ErrorAction Ignore
 
-Remove-Item "$rootDir\test\test-dotnet-new" -Recurse -ErrorAction Ignore
+  mkdir "$rootDir\test\test-dotnet-new" -Force | cd
 
-mkdir "$rootDir\test\test-dotnet-new" -Force | cd
+  Run-Cmd "dotnet" "new --lang f#"
 
-Run-Cmd "dotnet" "new --lang f#"
+  Run-Cmd "dotnet" "restore -f `"$rootDir\bin`""
 
-Run-Cmd "dotnet" "restore -f `"$rootDir\bin`""
+  Dotnet-Build
 
-Run-Cmd "dotnet" "--verbose build"
+  Dotnet-Run "c d"
+}
 
-Run-Cmd "dotnet" "--verbose run a b"
+# test from assets
 
-Write-Host "## Testing dotnet new [OK]"  -foregroundcolor "green"
+function Dotnet-Restore {
+  Run-Cmd "dotnet" "restore -f `"$rootDir\bin`" --configfile `"$rootDir\test\NuGet.Config`""
+}
+
+Run-Test "test/TestAppWithArgs" {
+
+  cd "$rootDir\test\TestAppWithArgs"
+
+  Dotnet-Restore
+
+  Dotnet-Build
+
+  Dotnet-Run ""
+}
+
+Run-Test "test/TestLibrary" {
+
+  cd "$rootDir\test\TestLibrary"
+
+  Dotnet-Restore
+
+  Dotnet-Build
+}
+
+Write-Host "# Tests results"  -ForegroundColor "magenta"
+foreach ($h in $global:testSuite.GetEnumerator()) {
+    $color = If ($h.Value) {"green"} Else {"red"}
+    $text = If ($h.Value) {"PASSED"} Else {"FAILED"}
+    Write-Host "- $($h.Name): [$text]" -ForegroundColor $color
+}
+

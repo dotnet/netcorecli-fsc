@@ -21,7 +21,7 @@ function Run-Cmd
 {
   param( [string]$exe, [string]$arguments )
   Write-Host "$exe $arguments"
-  iex "$exe $arguments"
+  iex "$exe $arguments 2>&1" | Out-Host
   if ($LastExitCode -ne 0) {
     throw "Command failed with exit code $LastExitCode."
   }
@@ -43,13 +43,15 @@ Run-Cmd "dotnet" "--info"
 if ($Targets -contains "Build") {
   Write-Host "# BUILD" -foregroundcolor "magenta"
 
-  cd $rootDir
+  Write-Host "remove dir $rootDir\bin"
+  Remove-Item "$rootDir\bin" -Recurse -ErrorAction Ignore
+
+  Write-Host "cd src\dotnet-compile-fsc"
+  cd src\dotnet-compile-fsc
 
   Run-Cmd "dotnet" "restore"
 
-  cd src\dotnet-compile-fsc
-
-  Run-Cmd "dotnet" "pack -c Release -o `"$rootDir\bin`" --version-suffix=$VersionSuffix"
+  Run-Cmd "dotnet" "pack -c Release -o `"$rootDir\bin`" --version-suffix $VersionSuffix"
 
   Write-Host "# BUILD [OK]"  -foregroundcolor "green"
 }

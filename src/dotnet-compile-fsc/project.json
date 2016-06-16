@@ -8,8 +8,8 @@
         "Microsoft.FSharp.Compiler.netcore": "1.0.0-alpha-160509",
 
         "Microsoft.DotNet.ProjectModel": "1.0.0-*",
-        "Microsoft.DotNet.Compiler.Common": "1.0.0-*",
-        "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
+        "Microsoft.DotNet.Compiler.Common": "1.0.0-preview2-*",
+        "Microsoft.DotNet.Cli.Utils": "1.0.0-preview2-*",
 
         "Microsoft.NETCore.App": {
           "type": "platform",
