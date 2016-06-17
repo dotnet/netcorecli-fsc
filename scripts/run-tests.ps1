@@ -78,3 +78,6 @@ foreach ($h in $global:testSuite.GetEnumerator()) {
     Write-Host "- $($h.Name): [$text]" -ForegroundColor $color
 }
 
+If ($global:testSuite.ContainsValue($FALSE)) {
+  exit 2
+}
