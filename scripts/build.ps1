@@ -34,7 +34,7 @@ Push-Location $PWD
 
 
 # dotnet info
-
+Write-Host "# INFO" -foregroundcolor "magenta"
 Run-Cmd "dotnet" "--info"
 
 
