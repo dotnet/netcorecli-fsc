@@ -88,11 +88,15 @@ Run-Test "test/TestApp" {
 
 # test templates
 
+function Dotnet-Restore-OnlyFallback {
+  Run-Cmd "dotnet" "restore -v Information -f `"$rootDir\bin`""
+}
+
 Run-Test "examples/preview2/console" {
 
   cd "$rootDir\examples\preview2\console"
 
-  Dotnet-Restore
+  Dotnet-Restore-OnlyFallback
 
   Dotnet-Build
 
@@ -103,7 +107,7 @@ Run-Test "examples/preview2/lib" {
 
   cd "$rootDir\examples\preview2\lib"
 
-  Dotnet-Restore
+  Dotnet-Restore-OnlyFallback
 
   Dotnet-Build
 }
