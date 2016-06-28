@@ -16,7 +16,12 @@
       "target": "project"
     },
     "Microsoft.NETCore.App": "1.0.0",
-    "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-160509"
+    "Microsoft.FSharp.Core.netcore": "1.0.0-alpha-*"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50"
+    }
   },
   "tools": {
     "dotnet-compile-fsc": {
@@ -26,11 +31,6 @@
         "portable-net45+win81",
         "netstandard1.3"
       ]
-    }
-  },
-  "frameworks": {
-    "netcoreapp1.0": {
-      "imports": "dnxcore50"
     }
   },
   "runtimes": {
