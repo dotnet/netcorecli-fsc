@@ -48,7 +48,7 @@ Run-Test "dotnet new" {
 # test from assets
 
 function Dotnet-Restore {
-  Run-Cmd "dotnet" "restore -f `"$rootDir\bin`" --configfile `"$rootDir\test\NuGet.Config`""
+  Run-Cmd "dotnet" "restore -v Information -f `"$rootDir\bin`" --configfile `"$rootDir\test\NuGet.Config`""
 }
 
 Run-Test "test/TestAppWithArgs" {

@@ -49,7 +49,7 @@ if ($Targets -contains "Build") {
   Write-Host "cd src\dotnet-compile-fsc"
   cd src\dotnet-compile-fsc
 
-  Run-Cmd "dotnet" "restore"
+  Run-Cmd "dotnet" "restore -v Information"
 
   Run-Cmd "dotnet" "pack -c Release -o `"$rootDir\bin`" --version-suffix $VersionSuffix"
 
