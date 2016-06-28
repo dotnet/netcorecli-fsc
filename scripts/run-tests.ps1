@@ -86,6 +86,30 @@ Run-Test "test/TestApp" {
   Dotnet-Run ""
 }
 
+# test templates
+
+Run-Test "examples/preview2/console" {
+
+  cd "$rootDir\examples\preview2\console"
+
+  Dotnet-Restore
+
+  Dotnet-Build
+
+  Dotnet-Run ""
+}
+
+Run-Test "examples/preview2/lib" {
+
+  cd "$rootDir\examples\preview2\lib"
+
+  Dotnet-Restore
+
+  Dotnet-Build
+}
+
+# results
+
 Write-Host "# Tests results"  -ForegroundColor "magenta"
 foreach ($h in $global:testSuite.GetEnumerator()) {
     $color = If ($h.Value) {"green"} Else {"red"}
