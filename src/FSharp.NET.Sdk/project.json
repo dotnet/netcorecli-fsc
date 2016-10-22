@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "frameworks": {
+    "netstandard1.3": {}
+  },
+  "packOptions": {
+    "summary": "Sample .NET Sdk and F# integration using dotnet-compile-fsc.",
+    "tags": [ "f#", "sdk" ],
+    "owners": [ "Enrico Sada" ],
+    "releaseNotes": "",
+    "projectUrl": "https://github.com/dotnet/netcorecli-fsc",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/exampleorg/example"
+    },
+    "files": {
+      "mappings": {
+          "build/netstandard1.0/FSharp.NET.Sdk.props": "FSharp.NET.Sdk.props",
+          "build/netstandard1.0/FSharp.NET.Sdk.targets": "FSharp.NET.Sdk.targets"
+      }
+    }
+  }
+}

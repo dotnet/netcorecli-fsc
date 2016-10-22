@@ -27,3 +27,12 @@ the cached package is used.
 Use `-VersionSuffix 013076` argument ( for example `build -VersionSuffix 013076`) 
 to create the package `dotnet-compile-fsc.1.0.0-preview2-013076`
 
+
+## The .NET Core SDK preview3 and msbuild based project system
+
+Work in progress.
+
+Require .NET Core SDK preview3 ( http://github.com/dotnet/cli ), tested with `1.0.0-preview3-003884`
+
+Example apps in `examples/preview3`
+See also `src/FSharp.Net.Sdk` and `test-msbuild` directories.
