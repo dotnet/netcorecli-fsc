@@ -1,0 +1,85 @@
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <Target Name="TestAppConsole">
+        <PropertyGroup>
+            <ProjectDirectory>TestAppConsole</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run3" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+            <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+        </Exec>
+        <Error
+            Text="Expected 'Hello World from F#!' but was '$(OutputOfExec)'"
+            Condition="'$(OutputOfExec)' != 'Hello World from F#!'" />
+    </Target>
+
+    <Target Name="TestApp">
+        <PropertyGroup>
+            <ProjectDirectory>TestApp</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run3" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+            <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+        </Exec>
+        <Error
+            Text="Expected 'This string came from the test library!' but was '$(OutputOfExec)'"
+            Condition="'$(OutputOfExec)' != 'This string came from the test library!'" />
+        <!--<Exec Command="dotnet pack3" WorkingDirectory="$(ProjectDirectory)" />-->
+    </Target>
+
+    <Target Name="TestAppConsoleNet451">
+        <PropertyGroup>
+            <ProjectDirectory>TestAppConsoleNet451</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run3" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+            <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+        </Exec>
+        <Error
+            Text="Expected 'Hello World from F#!' but was '$(OutputOfExec)'"
+            Condition="'$(OutputOfExec)' != 'Hello World from F#!'" />
+    </Target>
+
+    <Target Name="TestAppConsoleCrossGen">
+        <PropertyGroup>
+            <ProjectDirectory>TestAppConsoleCrossGen</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet pack3" WorkingDirectory="$(ProjectDirectory)" />
+    </Target>
+
+    <Target Name="TestLibrary">
+        <PropertyGroup>
+            <ProjectDirectory>TestLibrary</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet pack3" WorkingDirectory="$(ProjectDirectory)" />
+    </Target>
+
+    <Target Name="Build" />
+
+    <ItemGroup>
+        <AllTests Include="TestAppConsole" />
+        <AllTests Include="TestApp" />
+        <AllTests Include="TestAppConsoleNet451" />
+        <AllTests Include="TestAppConsoleCrossGen" />
+        <AllTests Include="TestLibrary" />
+    </ItemGroup>
+
+    <Target Name="RunAll" DependsOnTargets="@(AllTests)" />
+
+</Project>

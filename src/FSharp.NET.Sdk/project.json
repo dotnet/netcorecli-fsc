@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.21",
   "frameworks": {
     "netstandard1.3": {}
   },
@@ -16,7 +16,9 @@
     },
     "files": {
       "mappings": {
+          "buildCrossTargeting/FSharp.NET.Sdk.targets": "FSharp.NET.CrossTargeting.Sdk.targets",
           "build/netstandard1.0/FSharp.NET.Sdk.props": "FSharp.NET.Sdk.props",
+          "build/netstandard1.0/FSharp.NET.Core.Sdk.targets": "FSharp.NET.Core.Sdk.targets",
           "build/netstandard1.0/FSharp.NET.Sdk.targets": "FSharp.NET.Sdk.targets"
       }
     }

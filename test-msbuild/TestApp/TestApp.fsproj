@@ -1,5 +1,7 @@
 ﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+
+  <Import Project="..\TestSuite.props" />
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -28,7 +30,7 @@
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="FSharp.NET.Sdk">
-      <Version>0.2.*</Version>
+      <Version>$(FSharpNETSdkVersion)</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <ProjectReference Include="..\TestLibrary\TestLibrary.fsproj">

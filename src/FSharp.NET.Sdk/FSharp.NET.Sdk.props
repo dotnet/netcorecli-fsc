@@ -1,19 +1,19 @@
 <!--
 ***********************************************************************************************
-Microsoft.NET.Sdk.CSharp.props
+FSharp.NET.Sdk.props
 
-WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
-          created a backup copy.  Incorrect changes to this file will make it
-          impossible to load or build your projects from the command-line or the IDE.
+WARNING:  You CAN MODIFY this file, doesnt matter if you are not knowledgeable about MSBuild and
+          without a backup copy.
+          Incorrect changes to this file will make it impossible to load or build your projects
+          from the command-line or the IDE. 
+          Just remove FSharp.NET.Sdk package from nuget cache and re-restore.
 
-Copyright (c) .NET Foundation. All rights reserved. 
 ***********************************************************************************************
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
     <WarningLevel>4</WarningLevel>
-    <NoWarn>1701</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>

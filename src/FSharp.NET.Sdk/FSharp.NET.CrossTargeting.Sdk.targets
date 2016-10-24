@@ -1,0 +1,28 @@
+﻿<!--
+***********************************************************************************************
+FSharp.NET.Core.Sdk.targets
+
+WARNING:  You CAN MODIFY this file, doesnt matter if you are not knowledgeable about MSBuild and
+          without a backup copy.
+          Incorrect changes to this file will make it impossible to load or build your projects
+          from the command-line or the IDE. 
+          Just remove FSharp.NET.Sdk package from nuget cache and re-restore.
+
+This file defines the steps in the standard build process specific for F# .NET projects.
+For example, it contains the step that actually calls the F# compiler. 
+Flow is: msbuild -> CoreCompile -> dotnet compile-fsc -> fsc
+The remainder of the build process is defined in Microsoft.Common.targets, but is not imported by 
+this file.
+
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <Import Project="$(MSBuildToolsPath)\Microsoft.Common.CrossTargeting.targets" />
+
+    <PropertyGroup Condition="$(MSBuildProjectFullPath.EndsWith('.fsproj')) == 'true' AND '$(PackProjectInputFile)' == ''">
+      <PackProjectInputFile>$(MSBuildProjectFullPath)</PackProjectInputFile>
+    </PropertyGroup>    
+
+</Project>
