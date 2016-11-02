@@ -1,7 +1,16 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup Condition=" '$(FSharpNETSdkVersion)' == '' ">
-    <FSharpNETSdkVersion>0.3.*</FSharpNETSdkVersion>
+    <FSharpNETSdkVersion>1.0.0-alpha-*</FSharpNETSdkVersion>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MicrosoftFSharpCorenetcoreVersion)' == '' ">
+    <MicrosoftFSharpCorenetcoreVersion>1.0.0-alpha-161023</MicrosoftFSharpCorenetcoreVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MicrosoftNETSdkVersion)' == '' ">
+    <MicrosoftNETSdkVersion>1.0.0-alpha-20161029-1</MicrosoftNETSdkVersion>
+  </PropertyGroup>
+
 
 </Project>

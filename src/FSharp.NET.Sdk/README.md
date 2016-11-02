@@ -1,12 +1,12 @@
 
-Tested with .NET Core sdk v1.0.0-preview3-003884
+Tested with .NET Core sdk version `1.0.0-preview3-004007`
 
 ## On restore
 
 The targets and props file are auto imported if the package is referenced.
 
 The auto-import is from `obj\{ProjectName}.fsproj.nuget.g.targets` and `obj\{ProjectName}.fsproj.nuget.g.props` 
-generated on `dotnet restore3`
+generated on `dotnet restore`
 
 
 ## The `CoreCompile` task
@@ -18,7 +18,7 @@ generated on `dotnet restore3`
 
 ## Notes
 
-The `Authors` property is required for `dotnet pack3`
+The `Authors` property is required for `dotnet pack`
 Because the `obj\{Configuration}\dotnet-compile-fsc.rsp` is created (like preview2) the intellisense in VS Code already works using Ionide.
 
 ## TODO

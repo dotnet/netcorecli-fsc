@@ -4,6 +4,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net451;netcoreapp1.0</TargetFrameworks>
+    <RuntimeIdentifiers>win7-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -18,11 +19,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk">
-      <Version>1.0.0-alpha-20161012-3</Version>
+      <Version>1.0.0-alpha-20161029-1</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="FSharp.NET.Sdk">
-      <Version>0.3.*</Version>
+      <Version>1.0.0-alpha-000001</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
@@ -31,7 +32,7 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.FSharp.Core.netcore">
-      <Version>1.0.0-alpha-*</Version>
+      <Version>1.0.0-alpha-161023</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">

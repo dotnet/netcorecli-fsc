@@ -32,7 +32,7 @@ to create the package `dotnet-compile-fsc.1.0.0-preview2-013076`
 
 Work in progress.
 
-Require .NET Core SDK preview3 ( http://github.com/dotnet/cli ), tested with `1.0.0-preview3-003884`
+Require .NET Core SDK preview3 ( http://github.com/dotnet/cli ), tested with `1.0.0-preview3-004007`
 
 Example apps in `examples/preview3`
 See also `src/FSharp.Net.Sdk` and `test-msbuild` directories.

@@ -6,14 +6,14 @@
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet build3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet run3" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
             <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
         </Exec>
         <Error
             Text="Expected 'Hello World from F#!' but was '$(OutputOfExec)'"
-            Condition="'$(OutputOfExec)' != 'Hello World from F#!'" />
+            Condition="! $(OutputOfExec.Contains('Hello World from F#!'))" />
     </Target>
 
     <Target Name="TestApp">
@@ -22,15 +22,15 @@
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet build3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet run3" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
             <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
         </Exec>
         <Error
             Text="Expected 'This string came from the test library!' but was '$(OutputOfExec)'"
-            Condition="'$(OutputOfExec)' != 'This string came from the test library!'" />
-        <!--<Exec Command="dotnet pack3" WorkingDirectory="$(ProjectDirectory)" />-->
+            Condition="! $(OutputOfExec.Contains('This string came from the test library!'))" />
+        <!--<Exec Command="dotnet pack" WorkingDirectory="$(ProjectDirectory)" />-->
     </Target>
 
     <Target Name="TestAppConsoleNet451">
@@ -39,14 +39,14 @@
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet build3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet run3" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
             <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
         </Exec>
         <Error
             Text="Expected 'Hello World from F#!' but was '$(OutputOfExec)'"
-            Condition="'$(OutputOfExec)' != 'Hello World from F#!'" />
+            Condition="! $(OutputOfExec.Contains('Hello World from F#!'))" />
     </Target>
 
     <Target Name="TestAppConsoleCrossGen">
@@ -55,9 +55,23 @@
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet build3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet pack3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build -r win7-x64" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run -f netcoreapp1.0" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+            <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+        </Exec>
+        <Error
+            Text="Expected 'Hello World from F#! using netcoreapp1.0' but was '$(OutputOfExec)'"
+            Condition="! $(OutputOfExec.Contains('Hello World from F#! using netcoreapp1.0'))" />
+        <!-- dotnet run -f net451 raise error about RuntimeIdentifier property not set -->
+        <Exec Command="bin\Debug\net451\TestAppConsole.exe" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+            <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+        </Exec>
+        <Error
+            Text="Expected 'Hello World from F#! using net451' but was '$(OutputOfExec)'"
+            Condition="! $(OutputOfExec.Contains('Hello World from F#! using net451'))" />
+        <!-- dotnet pack raise error about RuntimeIdentifier property not set -->
+        <Exec Command="dotnet pack /p:RuntimeIdentifier=win7-x64" WorkingDirectory="$(ProjectDirectory)" />
     </Target>
 
     <Target Name="TestLibrary">
@@ -66,20 +80,69 @@
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore3" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet pack3" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet pack" WorkingDirectory="$(ProjectDirectory)" />
     </Target>
 
-    <Target Name="Build" />
+    <Target Name="TestLibraryCrossGen">
+        <PropertyGroup>
+            <ProjectDirectory>TestLibraryCrossGen</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet pack" WorkingDirectory="$(ProjectDirectory)" />
+    </Target>
+
+    <Target Name="SmokeTestExamplesPreview3">
+        <PropertyGroup>
+            <ProjectDirectory>..\examples\preview3\console</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run" WorkingDirectory="$(ProjectDirectory)" />
+
+        <PropertyGroup>
+            <ProjectDirectory>..\examples\preview3\lib</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet pack" WorkingDirectory="$(ProjectDirectory)" />
+
+        <PropertyGroup>
+            <ProjectDirectory>..\examples\preview3\console-crossgen</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build -r win7-x64" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet run -f netcoreapp1.0" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet pack /p:RuntimeIdentifier=win7-x64" WorkingDirectory="$(ProjectDirectory)" />
+    </Target>
 
     <ItemGroup>
         <AllTests Include="TestAppConsole" />
         <AllTests Include="TestApp" />
         <AllTests Include="TestAppConsoleNet451" />
-        <AllTests Include="TestAppConsoleCrossGen" />
         <AllTests Include="TestLibrary" />
+        <AllTests Include="TestLibraryCrossGen" />
+        <AllTests Include="TestAppConsoleCrossGen" />
+        <AllTests Include="SmokeTestExamplesPreview3" />
     </ItemGroup>
 
     <Target Name="RunAll" DependsOnTargets="@(AllTests)" />
+
+    <Target Name="TestSuiteInfo">
+        <ItemGroup>
+            <TestLI Include="@(AllTests -> '- %(Identity)%0A')" />
+        </ItemGroup>
+        <Message Importance="high" Text="Use '/t:RunAll' to run all tests" />
+        <Message Importance="high" Text="or '/t:TestName' to run a specific test" />
+        <Message Importance="high" Text="Tests avaiable:%0A @(TestLI,' ')" />
+    </Target>
 
 </Project>

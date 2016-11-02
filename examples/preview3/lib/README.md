@@ -1,6 +1,7 @@
 
 Require .NET Core sdk preview3
-Tested with .NET Core sdk v1.0.0-preview3-003884
+Tested with .NET Core sdk version `1.0.0-preview3-004007`
 
-- dotnet restore3
-- dotnet build3
+- `dotnet restore`
+- `dotnet build`
+- `dotnet pack`

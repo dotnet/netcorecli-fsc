@@ -6,6 +6,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net451</TargetFramework>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk">
-      <Version>1.0.0-alpha-20161012-3</Version>
+      <Version>$(MicrosoftNETSdkVersion)</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="FSharp.NET.Sdk">
