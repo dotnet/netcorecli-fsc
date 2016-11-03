@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+    
+# Hi everyone! 
+
+First session of the:
+
+F# using .NET Core with SDK Development group 
+
+
+TASK 1: a better name :D
+
+---
+
+    
+# .NET detailed roadmap
+
+1. .NET on windows (VS/msbuild/clr)
+2. *magic* during X months
+3. XPLAT .NET!
+
+---
+
+## .NET on windows
+
+Your .NET App:
+
+- use primitives classes like array/string (from Clr)
+- use some classes from the Base Class Libraries (a collection of assemblies), like System.IO.dll
+- use other specific assemblies maybe.
+- use your code, compiled in an assembly/executable as IL (intermediate language)
+
+---
+
+##  .NET on windows - big components
+
+RUNTIME = Clr, common language runtime. GC, Basic classes, etc
+
+Where i can find the additional assemblies? i just reference "System.IO" assembly.
+Two places:
+
+1. machine global: GAC, global assembly cache.
+2. local path: specific location
+
+Other options:
+
+- Project references: it's just the path of output assembly, so like `2` 
+- nuget packages. Zip files of assemblies. Each packages is downloaded from internet into a local cache
+    - A single zip contains multiple directory, each for every supported framework.
+    - Each target framework has a name (like `.NET 4.6` and a moniker ( like `net46` ) 
+    - so is just like `2`, a `local path`
+
+---
+
+## .NET on windows - how running an .exe works
+
+How running a `test1.exe` works on windows ( https://msdn.microsoft.com/en-us/library/k5532s8a(v=vs.110).aspx )
+
+1. Windows see `test1.exe` is a managed app (it's a flag in the file)
+2. Windows load `mscoree.dll` (Microsoft .NET Runtime Execution Engine) and change the entry point to the one in runtime
+3. the entry point in runtime do:
+    1. jit compile the assembly (IL -> machine instructions)
+    2. find the managed main
+    3. execute it
+
+On unix/mac, you need to do `mono test1.exe`, because there is no `1` and `2`.
+
+So there is always a runtime execution engine, and a .net executable is similar to a library (with a trick :D )
+
+That's importnat because for .net core, something should run your application too!
+
+---
+
+
+# History of *magic*
+
+Instead of write current status i'll do a fast history, because each feature it's the result
+of a feedback of previous experiements.
+I think is easier like that because hacking the sdk/netcore touch some legacy too.
+Knowing history make easier to see the roadmap of sdk/netcore and foundamental topics.
+
+The .NET Core is a bootstrap of the entire runtime/bcl/compilers/tooling in other os.
+With lots of lesson from community feedback too.
+
+First rule:
+- You cannot use something if doesnt work.
+
+For tools/everything:
+- Create semplified tool/lib and what you need to make progress.
+- Reevaluate from time to time if progress make possible to use the real tools. Or are not needed anymore.
+
+---
+
+## Project K (Q2 2014)
+
+Started by ASP.NET Team, first avaiabile code in Q2 2014 ( http://davidfowl.com/asp-net-vnext/ )
+Github: https://github.com/aspnet/Home
+
+It's the next big aspnet iteration. 
+Restart from zero, same name, really different implementation.
+Xplat (.NET on win, unix/osx with mono). 
+Lots of new ideas to simplify asp.net dev.
+
+Main Ideas:
+
+- NuGet packages are the unit of reference (not assemblies)
+- Projects and NuGet packages are interchangeable. Projects can depend on packages and packages can depend on projects.
+- First class ability to produce NuGet packages from the project system.
+- OSS by default
+- Side by side runtimes
+- Human readable and easy to author project files with default conventions.
+
+---
+
+## Project K (Q2 2014) - 2
+
+Main ideas, but dropped later:
+- Runtime compilation; building a binary on disk isn't required to run (using Roslyn).
+- Ability to change code and f5 in the browser without an explicit build step.
+- No strong naming
+
+Tools:
+
+- KRE - K Runtime Environment
+    - All the following tools,script required and useful for development
+- KVM - K Version Manager
+    - Let's download all the runtime/package needed from internet. Easy upgrade, manage parallel installs.
+- KPM - K Package Manager
+    - I need to download the nuget packages from internet! manage local cache!
+- KLR - K runtime
+    - The entry point to abstract the execution if on windows or on mono, used like `klr myapp.exe`.
+    That's the single exe who replace `mscoreee`, to find the entry point and run it.
+
+---
+
+## Project K (Q2 2014) - 3
+
+Project System:
+
+- similar to nodejs (aspnet is a web team..)
+- a plain json file (`project.json`) where tools can read source files, refs, etc
+- conventions and defaults!
+- first class support for dependencies from nuget packages
+- easy multiple target framework support, not like csproj/msbuild
+- easy project => nuget package, so there are options for nuspec fields (like authors), etc
+
+Nuget TFM: 
+- added `aspnetcore50`
+
+---
+
+# .NET Open source (Q4 2014)
+
+Microsoft say who .NET is going open source!
+The .NET Core ( coreclr/bcl/compilers ) are going to be xplat!
+https://blogs.msdn.microsoft.com/dotnet/2014/11/12/net-core-is-open-source/
+
+Work starts:
+
+- porting of CLR -> CoreClr (https://github.com/dotnet/coreclr)
+- porting of BCL -> as nuget packages (https://github.com/dotnet/corefx)
+- porting of compilers ->
+  - csc/vbc for c#/vb (https://github.com/dotnet/roslyn)
+  - fsc for f# (https://github.com/microsoft/visualfsharp/)
+
+But that's just runtime, bcl and compiler. 
+
+When done, you can only invoke the compiler from command line, passing arguments (source files,names,path to assemblies, etc) and generating
+a library/executable.
+
+That's not how we work usually, very few invoke the compiler by hand.
+
+---
+
+# .NET Open source (Q4 2014) - I dont invoke the compiler directly!
+
+The rest of tools?
+
+- I dont want to repeat myself, where i write the source files list?
+- The references? that's boring and often versions (and paths) change!
+- Compiler define? Release? Debug? Exe name? output directory?
+
+We need a project system! Something where i can write my source files list, references, etc (same function of .fsproj)
+
+Meanwhile `Project K` added Coreclr support.
+
+So now `Project K` support three runtimes (.net clr, coreclr, mono) with same tools
+
+---
+
+## K -> DNX (Q1 2015)
+
+`K` is renamed to `DNX` (https://github.com/aspnet/Home/issues/261)
+
+VS Support with an wrapper `myproject.xproj` prject file. Just load the vs extension who read the `project.json`.
+
+TFM deprecated `aspnetcore50`, added `dnxcore50`
+
+Tools changed/renamed:
+
+- `KLR` -> `dnx`
+- `KRE` -> `dnx`
+- `KVM` -> `dnvm`
+- `kpm` -> `nuget`
+
+Because now the `nuget.exe` client can:
+
+- run xplat 
+- has a local cache (`K` use lots of packages, everything is a package!!)
+- understand project.json
+
+The custom kpm tool is dropped.
+
+So a simple tool `kpm` is replaced by the original tool `nuget`, now cross platform and enhanced.
+
+---
+
+## K -> DNX (Q1 2015) - NOTES and PAINS
+
+Some features added are make it a bit difficult the migration from normal libraries/console app,
+
+For example:
+
+- the entry point `dnx` choose the `Main` of application from a `commands` list inside `project.json`.
+- A `project.json` is always required. 
+
+Remember the main use case is as web app, who can have additional commands (console app) for utilities
+
+So works ok for libraries/web but is a bit annoying for console app.
+
+
+---
+
+## K -> DNX (Q1 2015) - F# work start!
+
+F# work is started by @Alxandr in https://github.com/fsprojects/fsharp-dnx
+
+The `RC2` version works, but we see the initial friction because `dnx` has some special design decision.
+
+Some are good features, but the initial decision to use `roslyn as a service` instead of `csc`, create a tight coupling with
+roslyn compiler (so hard for F#)
+
+- Compilation in memory. The f# compiler support only files, as workaround streams are saved and loaded.
+  - i started a pr in `microsoft/visualfsharp` to support that, but never merged (i will rebase sometimes later, can be useful maybe)
+- `ANI` (Assembly Netrual Interfaces) aka `Structural Equivalence of Interfaces` is a feature built on top of roslyn. not supported by f# compiler or by Clr directly.
+
+---
+
+## .NET CLI (Q3 2015)
+
+GOAL: Create an easy to use command line interface toolkit https://github.com/dotnet/cli
+
+The sdk it's used invoking an console app. `dotnet`.
+
+The sdk use lessons learned in k/dnx/aspnet, because works and devs like it!
+But the main use case is a bit different: library and console app.
+
+- reuse the `project.json` format because works, is clean/easy and integrated in VS already.
+- multi target framework
+- create a `dotnet` command, with subcommand for normal use case:
+  - `dotnet new` -> templates
+  - `dotnet restore` -> restore package (= nuget)
+  - `dotnet build` -> read `project.json` and call compilers
+  - `dotnet run` -> execute it, abstract runtime choosen (clr, coreclr, mono)
+  - `dotnet publish` -> put in a directory the compiled exe plus dependencies (xplat deploy).
+
+F# works starts: https://github.com/enricosada/fsharp-dotnet-cli-samples/wiki/Changelog#100001494-first-lkg
+
+---
+
+## .NET CLI (Q3 2015) - How running a console app works?
+
+How running a console app works? there is no more a `klr.exe`. Who is the runtime execution engine?
+There is `corehost.exe` (native executable, one for every OS!!) and a trick.
+
+You console app is compiled to `myapp.dll` (No windows tricks like in .NET fake .exe).
+To run it, you can do `corehost.exe myapp.dll` (that's what `dotnet myapp.dll` does)
+
+But after `dotnet publish` there is a `myapp.exe`? how is that possible?
+It's a trick.
+
+- On `dotnet publish` the `corehost.exe` is copied inside outdir and renamed as `myapp.exe`
+- The `myapp.exe` is near `myapp.dll` (your app)
+- when invoked, `myapp.exe` search for a `.dll` with same name in the directory, and run it.
+- so `corehost myapp.dll` is exactly like `myapp.exe`, but feel native in each os
+
+Better than `mono myapp.exe`, because it can be xcopy deployed, and is just a normal native app for users!.
+
+---
+
+## .NET Standard (Q4 2015) - PCL
+
+ref https://blogs.msdn.microsoft.com/dotnet/2016/09/26/introducing-net-standard/
+
+Previous state of the art: 
+
+To support multiple different implementation of platform (mean runtimes and BCL and names like ios, win8, uwp), new portable profiles are added.
+
+Each portable profile just **pick** some api, and works in defined set of of environemt (so "wp8+wp7+ios" = "profile123" for example)
+
+Problem are:
+
+- if tomorrow a new a bit different platform is added, for example "wp9", your package cannot by used by default.
+- proliferation of target frameworks.
+- package authors try to use the minimal set of features, and development is hard (missing api).
+- if you want to use a library as dependecy, must be pcl compliant too. so fewer packages avaiabile => less packages created.
+
+---
+
+## .NET Standard (Q4 2015) - NetStandard
+
+To make easier stuff, a new horizonal target framework is created
+
+- `netstandard` = `.Net Standard`
+
+And is *versioned*.
+
+Some info https://github.com/davidfowl/NetStandard and analogy https://github.com/davidfowl/NetStandard/blob/master/platforms.cs
+
+`netstandard` started small, adding new api each version.
+
+So `netstandard1.3` <= `netstandard1.5` <= `netstandard1.6` 
+
+**Semver compliant**. 
+
+The `netstandard2.0` will be a breaking change, but in reality doesnt matter, because the platforms already implement the `netstandard2.0` api.
+
+Each framework implementation = platform (mono, .net, .net core) version will say what is his compatibility.
+It' the framework maintainers job to be compliant.
+
+---
+
+## .NET Standard (Q4 2015) - Example
+
+For example `.NET 4.6` platform is compatibile at max with `netstandard1.3`. 
+to use `.netstandard1.4` you need `.NET 4.6.1`
+
+And some implementation
+
+- `netcoreapp1.0` = .Net Core App 1.0 = the console executable of .net core
+- `net451` = the .NET 4.5.1
+
+---
+
+## .NET CLI beta (Q4 2015)
+
+The `dnxcore50` tfm is obsolete, use `netstandard1.5` instead. 
+
+It's possibile to import (that mean are included in restore) the `dnxcore50` in `netstandard1.5` to use packages built for `dnxcore50`
+
+```json`
+    "imports": [ "dnxcore50" ]
+```
+
+It's created a meta package (empty, but reference other packages) `Microsoft.NETCore.App` to group the most used deps for an app
+
+F# works continue:
+
+https://github.com/enricosada/fsharp-dotnet-cli-samples/wiki/Changelog#100-beta-002071-support-netstandard-xplat
+
+- support `netstandard`, `netcoreapp1.0`
+- xplat
+
+---
+
+## .NET CLI preview1, renamed as .NET Core SDK (Q2 2016)
+
+Status: Tooling (cli) is less complete. 
+the .net core is more complete.
+
+Before the roadmap was unified (`beta`), now is splitted in two:
+
+- `.NET Core` is RC2 (coreclr/bcl)
+- `.NET CLI` is renamed to `.NET Core Sdk`, and is `preview1` (tooling)
+
+ref https://blogs.msdn.microsoft.com/dotnet/2016/05/16/announcing-net-core-rc2/
+
+---
+
+### .NET Core SDK preview1 (Q2 2016) - F# works OOTB:
+
+F# works OOTB!!
+
+https://github.com/enricosada/fsharp-dotnet-cli-samples/wiki/Changelog#100-preview1-002702-stable-preview1-support-netstandard-15-xplat
+
+And a new repo for `F# and Sdk` development is created https://github.com/dotnet/netcorecli-fsc
+
+as usual it's always the `fsc` compiler used:
+
+- project.json contains "compilerName: fsc"
+- `dotnet build` call `dotnet-compile-fsc`
+- `dotnet-compile-fsc` call `fsc`
+
+
+---
+
+## .NET Core SDK preview1 (Q2 2016) - sdk extensibility with tools
+
+A new sdk extensibility model, `Tools`, is added to sdk!
+
+A tool is declared in "tools" section, is inside a nuget packaged restored on `dotnet restore` step, and can 
+be invoked by `dotnet mytool`.
+
+```json
+  "tools": {
+    "dotnet-mytool": "1.0.*"
+  },
+```
+
+It's just a normal `netcoreapp1.0` console app, named `dotnet-mytool` (convention is `dotnet-{name}`)
+
+Anything with `dotnet-` prefix in `PATH` too, for example `dotnet-hello.bat` (or `.exe`, `.sh`), can be invoked like `dotnet hello`
+
+We use that for example with `dotnet-compile-fsc`.
+
+Other nice one: `dotnet-watch`.
+
+---
+
+## .NET Core SDK preview1 (Q2 2016) - `dotnet test`
+
+Added `dotnet test` to abstract the test framework.
+
+Use a different extensibility model, this implementation known the project file info, so for example the source files list.
+
+Each test framework (nunit/xunit) author will create a new nuget package.
+
+The nuget package is added to references, and loaded by `dotnet test`.
+
+Unified command line for running test, for basic use case. 
+Can pass additional test framework specific arguments obv.
+
+the dotnet-test can serve an http server, so unified test runner too.
+
+---
+
+## .NET Core SDK preview1 (Q2 2016) - VS Code initial support
+
+IONIDE team (@Krzysztof-Cieslak) add initial support.
+
+The flow is:
+
+- at `dotnet build` the `dotnet-compile-fsc` create a response file for the `fsc` at path `obj\Debug\netcoreapp1.0\dotnet-comopile-fsc.rsp`.
+- that response files contains all the `fsc` arguments, enough for `Fsharp.Compiler.Service` to give intellisense.
+- ionide initialize the `FCS` (throu `FsAutoComplete`) with content of response file.
+
+But is partial:
+
+- require at least one `dotnet build`, so `dotnet new && dotnet restore && code` doesnt give intellisense
+- no multi framework support
+
+---
+
+
+## .NET Core SDK preview1 (Q2 2016) - additional notes
+
+Asp.net drop dnx, and become a normal sdk console app.
+
+`ASP.NET 5 RC1` is renamed as `ASP.NET Core RC2`, and deprecate the `dnx` toolking in favor of
+the `.NET Core Sdk`.
+
+That mean the new asp.net version is just a normal .net core sdk console app, using `netstandard` tfm.
+
+Annoying migration from RC1 to RC2 for asp.net projects (that was a big issue online with RC1 users, and primary source of bad fame of .net core tooling)
+
+It's an aspnet problem, no changes for `.NET Core Sdk` projects.
+
+**Bonus point**: because is a normal sdk console app, aspnet projects works with F# too
+
+
+More os supported: `Red Hat`, `Centos`, `Debian`, `Linux Mint`, `Windows Nano Server TP5`
+
+---
+
+## .NET Core Sdk preview2 (Q3 2016)
+
+- `.NET Core 1.0` is RTM 
+- `.NET Core Sdk` is preview2 ( 1.0.0-preview2-001131 )
+
+ref https://blogs.msdn.microsoft.com/dotnet/2016/06/27/announcing-net-core-1-0/
+
+F# works, but f# templates inside `dotnet new` are wrong. Ouch.
+
+So partial OOTB experience.
+
+Templates are published on https://github.com/dotnet/netcorecli-fsc/tree/master/examples/preview2 waiting for an new release of sdk
+
+`dotnet-compile-fsc` is a normal sdk tool. Extensibility!
+
+---
+
+## .NET Core Sdk preview2 Update 1 (Q3 2016)
+
+- `.NET Core 1.0.1` released
+- `.NET Core Sdk` is preview2 ( 1.0.0-preview2-003131 )
+
+ref https://blogs.msdn.microsoft.com/dotnet/2016/09/13/announcing-september-2016-updates-for-net-core-1-0/
+
+F# templates in `dotnet new` fixed.
+
+F# works OOTB.
+
+
+---
+
+## .NET Core Sdk preview3 (WIP) - project.json removed
+
+**project.json support REMOVED**, that's it, DEAD, deprecated, removed, done.
+
+Added a new msbuild based project system (csproj/fsproj).
+
+Why? afaik :
+
+- msbuild now open source and works xplat, so can be used. Before didnt exists this option.
+- easier migration of existing project.
+- more features/use cases. less bug/unsupported use case (remember project.json started with web as use case)
+- msbuild/roslynworkspace cleanup. So new features added to msbuild, the one loved in `project.json`.
+   - VS work in https://github.com/dotnet/roslyn-project-system
+
+---
+
+## .NET Core Sdk preview3 (WIP) - use Msbuild instead
+
+MSBuild 15 (https://github.com/microsoft/msbuild): open source, support .net core too
+
+Major features:
+
+- Extensibility of project system with msbuild target in nuget packages added on `dotnet restore` step
+- MSBUILD: First class support for nuget package references ( `PackageReference` )
+- Pretty much same features of `project.json` project system.
+    - Nuget properties in fsproj for `dotnet pack`
+- Support project 2 project `ProjectRefernce`. The rerefenced project can be a normal project, not a real package.
+
+Notes:
+
+- `project.json` project will migrate to `csproj` with a tool.
+- `dotnet build` is pretty much msbuild invoked with `/t:Build` argument
+- `dotnet msbuild` invoke msbuild.
+- no `global.json`. the `dotnet restore` referenced project are found navigating by `ProjectReference`
+
+---
+
+## .NET Core Sdk preview3 (WIP) - F# status?
+
+F# wip but works:
+
+- examples in https://github.com/dotnet/netcorecli-fsc/tree/master/examples/preview3
+- tests https://github.com/dotnet/netcorecli-fsc/tree/master/test-msbuild
+
+---
+
+## F# in preview3 (TODAY, TODO, ROADMAP)
+
+Atm works like that.
+
+The project (fsproj) add a reference to a package `FSharp.NET.Sdk` who includes some msbuild target files.
+
+These target files are auto-imported after the first `dotnet-restore`.
+
+The msbuild target on `Build` just invoke `dotnet compile-fsc` tool, like `preview2`, passing the 
+arguments read from the fsproj.
+
+---
+
+## F# in preview3 - SDK INTEGRATION TODO: 
+
+- Should use an msbuild task (auto-imported from same package) instead of a dotnet tool.
+    - msbuild task exist already in microsfto/visualfsharp
+- Should be possibile to run previous fsproj too
+- Add comprensive test suite
+- dotnet-new templates. WIP in dotnet/cli also the support for remote templates, downloaded from nuget packages!
+- docs!
+- migration of existing projects in ecosystem.
+- FSI, fsharp interactive?
+
+---
+
+## F# in preview3 - IDE TODO:
+
+- Atm a tool `ProjectCracker` is used to read msbuid project.
+  -  Should be replaced or use the open source `msbuild` library.
+    - Get graph of references from `ProjectReferecen`
+    - Get arguments to initialize the `FSharp.Compiler.Service`
+- Add Templates where useful
+- Debugging! not supported yet!
+- Help Ionide, FsAutoComplete
+- Help VS, VFPT
+- possibile goal: full .net core stack, no mono dependency?
+
+---
+
+## F# in preview3 - Community Ecosystem TODO:
+
+- Help projects
+  - Paket, both .net core and the integration with sdk
+  - Fake
+- Help migrate projects who works already in `preview2`
+  - Suave (already works preview2)
+  - Argu (already works preview2)
+- Help finish migration of projects to `preview2` or `preview3`
+  - FsCheck
+- Help tooling projects
+  - FsSrGen, FsLexYacc, FCS, FsAutoComplete
+- Help compiler
+  - Test Suite
+
+---
+
+## Links
+
+- F# in sdk preview3 https://github.com/dotnet/cli/issues/4484
+- dotnet cli https://github.com/dotnet/cli
+- todo http://fsharp.github.io/2016/10/31/dotnetcore_sdk_group.html
+
+
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
