@@ -134,7 +134,7 @@ this file.
         </ItemGroup>
         <PropertyGroup>
             <!--HACK the dotnet additionalprobingpath params doesnt like a trailing slash, so trim it -->
-            <DotnetCompileFscExecCommand>dotnet exec --depsfile $(NuGetPackageRoot).tools\dotnet-compile-fsc\@(DotnetCompileFscVersion)\netcoreapp1.0\dotnet-compile-fsc.deps.json --additionalprobingpath $(NuGetPackageRoot.TrimEnd('\\')) $(NuGetPackageRoot)dotnet-compile-fsc\@(DotnetCompileFscVersion)\lib\netcoreapp1.0\dotnet-compile-fsc.dll</DotnetCompileFscExecCommand>
+            <DotnetCompileFscExecCommand>dotnet exec --depsfile $(NuGetPackageRoot).tools/dotnet-compile-fsc/@(DotnetCompileFscVersion)/netcoreapp1.0/dotnet-compile-fsc.deps.json --additionalprobingpath $(NuGetPackageRoot.TrimEnd('\\').TrimEnd('/')) $(NuGetPackageRoot)dotnet-compile-fsc/@(DotnetCompileFscVersion)/lib/netcoreapp1.0/dotnet-compile-fsc.dll</DotnetCompileFscExecCommand>
         </PropertyGroup>
 
         <!--STEP4 HACK: invoke dotnet-compile-fsc because already works-->

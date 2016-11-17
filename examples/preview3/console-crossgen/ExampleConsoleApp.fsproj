@@ -5,11 +5,7 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net451;netcoreapp1.0</TargetFrameworks>
     <RuntimeIdentifiers>win7-x64</RuntimeIdentifiers>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Version>1.0.0-preview3</Version>
-    <Authors>Enrico Sada</Authors>
+    <Version>1.0.0-alpha</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,11 +15,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk">
-      <Version>1.0.0-alpha-20161029-1</Version>
+      <Version>1.0.0-alpha-20161104-2</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="FSharp.NET.Sdk">
-      <Version>1.0.0-alpha-000001</Version>
+      <Version>1.0.0-alpha-*</Version>
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
