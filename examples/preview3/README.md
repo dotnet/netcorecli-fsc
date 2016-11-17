@@ -2,6 +2,8 @@
 Require .NET Core sdk preview3
 Tested with .NET Core sdk version `1.0.0-preview3-004056`
 
+All packages are on nuget.org, no special feed required
+
 # NOTES
 
 For following projects the normal commands (`restore`,`build`,`run`,`publish`,`test`,`pack`) have issues
