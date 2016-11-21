@@ -10,8 +10,6 @@ for .NET Core SDK preview2.
 
 ## Build
 
-[![Windows](https://ci.appveyor.com/api/projects/status/yj3r6p4u4eby99ge/branch/master?svg=true)](https://ci.appveyor.com/project/enricosada/netcorecli-fsc/branch/master)
-
 To build a package and run the tests:
 
 ```

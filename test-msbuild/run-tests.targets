@@ -129,10 +129,10 @@
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet build -r win7-x64" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet run -f netcoreapp1.0" WorkingDirectory="$(ProjectDirectory)" />
-        <Exec Command="dotnet pack /p:RuntimeIdentifier=win7-x64" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)"  Condition=" '$(OS)' == 'Windows_NT' " />
+        <Exec Command="dotnet build -r win7-x64" WorkingDirectory="$(ProjectDirectory)"  Condition=" '$(OS)' == 'Windows_NT' " />
+        <Exec Command="dotnet run -f netcoreapp1.0" WorkingDirectory="$(ProjectDirectory)"  Condition=" '$(OS)' == 'Windows_NT' " />
+        <Exec Command="dotnet pack /p:RuntimeIdentifier=win7-x64" WorkingDirectory="$(ProjectDirectory)"  Condition=" '$(OS)' == 'Windows_NT' " />
 
         <PropertyGroup>
             <ProjectDirectory>$(MSBuildThisFileDirectory)..\examples\preview3\xunit</ProjectDirectory>
@@ -162,10 +162,10 @@
     <ItemGroup>
         <AllTests Include="TestAppConsole" />
         <AllTests Include="TestApp" />
-        <AllTests Include="TestAppConsoleNet451" />
+        <AllTests Include="TestAppConsoleNet451" Condition=" '$(OS)' == 'Windows_NT' " />
         <AllTests Include="TestLibrary" />
-        <AllTests Include="TestLibraryCrossGen" />
-        <AllTests Include="TestAppConsoleCrossGen" />
+        <AllTests Include="TestLibraryCrossGen" Condition=" '$(OS)' == 'Windows_NT' " />
+        <AllTests Include="TestAppConsoleCrossGen" Condition=" '$(OS)' == 'Windows_NT' " />
         <AllTests Include="TestXunit" />
         <AllTests Include="SmokeTestExamplesPreview3" />
     </ItemGroup>
