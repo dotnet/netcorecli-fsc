@@ -95,12 +95,17 @@
     </Target>
 
     <Target Name="SmokeTestExamplesPreview3">
+
+        <PropertyGroup>
+            <RestoreConfigFile>..\NuGet.local.Config</RestoreConfigFile>
+        </PropertyGroup>
+
         <PropertyGroup>
             <ProjectDirectory>..\examples\preview3\console</ProjectDirectory>
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet restore --configfile $(RestoreConfigFile)" WorkingDirectory="$(ProjectDirectory)" />
         <Exec Command="dotnet build" WorkingDirectory="$(ProjectDirectory)" />
         <Exec Command="dotnet run" WorkingDirectory="$(ProjectDirectory)" />
 
@@ -109,7 +114,7 @@
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet restore --configfile $(RestoreConfigFile)" WorkingDirectory="$(ProjectDirectory)" />
         <Exec Command="dotnet build" WorkingDirectory="$(ProjectDirectory)" />
         <Exec Command="dotnet pack" WorkingDirectory="$(ProjectDirectory)" />
 
@@ -118,10 +123,34 @@
         </PropertyGroup>
 
         <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
-        <Exec Command="dotnet restore" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet restore --configfile $(RestoreConfigFile)" WorkingDirectory="$(ProjectDirectory)" />
         <Exec Command="dotnet build -r win7-x64" WorkingDirectory="$(ProjectDirectory)" />
         <Exec Command="dotnet run -f netcoreapp1.0" WorkingDirectory="$(ProjectDirectory)" />
         <Exec Command="dotnet pack /p:RuntimeIdentifier=win7-x64" WorkingDirectory="$(ProjectDirectory)" />
+
+        <PropertyGroup>
+            <ProjectDirectory>..\examples\preview3\xunit</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore --configfile $(RestoreConfigFile)" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet test" WorkingDirectory="$(ProjectDirectory)" />
+
+        <PropertyGroup>
+            <ProjectDirectory>..\examples\preview3\mstest</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore --configfile $(RestoreConfigFile)" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet test" WorkingDirectory="$(ProjectDirectory)" />
+
+        <PropertyGroup>
+            <ProjectDirectory>..\examples\preview3\web</ProjectDirectory>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" /> 
+        <Exec Command="dotnet restore --configfile $(RestoreConfigFile)" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build" WorkingDirectory="$(ProjectDirectory)" />
     </Target>
 
     <ItemGroup>

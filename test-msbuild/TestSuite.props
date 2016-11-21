@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(MicrosoftNETSdkVersion)' == '' ">
-    <MicrosoftNETSdkVersion>1.0.0-alpha-20161029-1</MicrosoftNETSdkVersion>
+    <MicrosoftNETSdkVersion>1.0.0-alpha-20161104-2</MicrosoftNETSdkVersion>
   </PropertyGroup>
 
 
