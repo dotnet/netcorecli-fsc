@@ -1,14 +1,16 @@
+
 param(
-    [string]$VersionSuffix="013072",
-    [string[]]$Targets=@("Build", "Tests"),
-    [switch]$Help)
+    [string] $Configuration = "Debug",
+    [string] $Architecture = "x64",
+    [string[]] $Targets = @("Build", "Tests"),
+    [switch] $Help,
+    [Parameter(Position=0, ValueFromRemainingArguments=$true)] $ExtraParameters )
 
 if($Help)
 {
-    Write-Host "Usage: build [[-Help] [-Targets <TARGETS...>] [-VersionSuffix <VERSION>]"
+    Write-Host "Usage: build [[-Help] [-Targets <TARGETS...>] "
     Write-Host ""
     Write-Host "Options:"
-    Write-Host "  -VersionSuffix  <VERSION>          Use <VERSION> as version suffix for package"
     Write-Host "  -Targets <TARGETS...>              Comma separated build targets to run (Build, Tests; Default is a full build and tests)"
     Write-Host "  -Help                              Display this help message"
     exit 0
@@ -17,10 +19,23 @@ if($Help)
 #make path absolute
 $rootDir = Split-Path -parent (Split-Path -parent $PSCommandPath)
 
+function Install-DotnetSdk([string] $sdkVersion)
+{
+    Write-Host "# Install .NET Core Sdk versione '$sdkVersion'" -foregroundcolor "magenta"
+    $sdkInstallScriptUrl = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview3/scripts/obtain/dotnet-install.ps1"
+    $sdkInstallScriptPath = ".dotnetsdk\dotnet_cli_install.ps1"
+    Write-Host "Downloading sdk install script '$sdkInstallScriptUrl' to '$sdkInstallScriptPath'"
+    New-Item "$rootDir\.dotnetsdk" -Type directory -ErrorAction Ignore
+    Invoke-WebRequest $sdkInstallScriptUrl -OutFile "$rootDir\$sdkInstallScriptPath"
+
+    Write-Host "Running sdk install script..."
+    ./.dotnetsdk/dotnet_cli_install.ps1 -InstallDir ".dotnetsdk\sdk-$sdkVersion" -Channel "preview" -version $sdkVersion
+}
+
 function Run-Cmd
 {
   param( [string]$exe, [string]$arguments )
-  Write-Host "$exe $arguments"
+  Write-Host "$exe $arguments" -ForegroundColor "Blue"
   iex "$exe $arguments 2>&1" | Out-Host
   if ($LastExitCode -ne 0) {
     throw "Command failed with exit code $LastExitCode."
@@ -28,42 +43,29 @@ function Run-Cmd
   Write-Host ""
 }
 
+function Using-Sdk ([string] $sdkVersion)
+{
+  $sdkPath = "$rootDir\.dotnetsdk\sdk-$sdkVersion"
+  Write-Host "# Using sdk '$sdkVersion'" -foregroundcolor "magenta"
+  $env:Path = "$sdkPath;$env:Path"
+  Run-Cmd "dotnet" "--version"
+}
+
+function Do-preview3
+{
+  Install-DotnetSdk '1.0.0-preview3-004056'
+
+  Using-Sdk '1.0.0-preview3-004056'
+
+  dotnet msbuild build.proj /m /p:Architecture=$Architecture $ExtraParameters
+  if ($LASTEXITCODE -ne 0) { throw "Failed to build" } 
+}
+
+# main
 try {
+  Push-Location $PWD
 
-Push-Location $PWD
-
-
-# dotnet info
-Write-Host "# INFO" -foregroundcolor "magenta"
-Run-Cmd "dotnet" "--info"
-
-
-# build the package
-
-if ($Targets -contains "Build") {
-  Write-Host "# BUILD" -foregroundcolor "magenta"
-
-  Write-Host "remove dir $rootDir\bin"
-  Remove-Item "$rootDir\bin" -Recurse -ErrorAction Ignore
-
-  Write-Host "cd src\dotnet-compile-fsc"
-  cd src\dotnet-compile-fsc
-
-  Run-Cmd "dotnet" "restore -v Information"
-
-  Run-Cmd "dotnet" "pack -c Release -o `"$rootDir\bin`" --version-suffix $VersionSuffix"
-
-  Write-Host "# BUILD [OK]"  -foregroundcolor "green"
-}
-
-# run tests
-
-if ($Targets -contains "Tests") {
-  Write-Host "# RUN TESTS" -foregroundcolor "magenta"
-  . $rootDir\scripts\run-tests.ps1
-}
-
-
+  Do-preview3
 }
 finally {
   Pop-Location
