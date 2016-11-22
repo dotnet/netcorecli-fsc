@@ -84,6 +84,19 @@
         <Exec Command="dotnet pack" WorkingDirectory="$(ProjectDirectory)" />
     </Target>
 
+    <Target Name="TestLibraryOutOfTree">
+        <PropertyGroup>
+            <OutOfTreeDirectory>$(MSBuildThisFileDirectory)</OutOfTreeDirectory>
+            <ProjectDirectory>$(MSBuildThisFileDirectory)TestLibrary</ProjectDirectory>
+            <ProjectPath>"$(ProjectDirectory)\TestLibrary.fsproj"</ProjectPath>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" />
+        <Exec Command="dotnet restore $(ProjectPath)" WorkingDirectory="$(OutOfTreeDirectory)" />
+        <Exec Command="dotnet build $(ProjectPath)" WorkingDirectory="$(OutOfTreeDirectory)" />
+        <Exec Command="dotnet pack $(ProjectPath)" WorkingDirectory="$(OutOfTreeDirectory)" />
+    </Target>
+
     <Target Name="TestLibraryCrossGen">
         <PropertyGroup>
             <ProjectDirectory>$(MSBuildThisFileDirectory)TestLibraryCrossGen</ProjectDirectory>
