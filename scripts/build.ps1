@@ -22,7 +22,7 @@ $rootDir = Split-Path -parent (Split-Path -parent $PSCommandPath)
 function Install-DotnetSdk([string] $sdkVersion)
 {
     Write-Host "# Install .NET Core Sdk versione '$sdkVersion'" -foregroundcolor "magenta"
-    $sdkInstallScriptUrl = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview3/scripts/obtain/dotnet-install.ps1"
+    $sdkInstallScriptUrl = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2.1/scripts/obtain/dotnet-install.ps1"
     $sdkInstallScriptPath = ".dotnetsdk\dotnet_cli_install.ps1"
     Write-Host "Downloading sdk install script '$sdkInstallScriptUrl' to '$sdkInstallScriptPath'"
     New-Item "$rootDir\.dotnetsdk" -Type directory -ErrorAction Ignore
@@ -53,9 +53,11 @@ function Using-Sdk ([string] $sdkVersion)
 
 function Do-preview3
 {
-  Install-DotnetSdk '1.0.0-preview3-004056'
+  $sdkVersion = '1.0.0-preview2-1-003177'
 
-  Using-Sdk '1.0.0-preview3-004056'
+  Install-DotnetSdk $sdkVersion
+
+  Using-Sdk $sdkVersion
 
   dotnet msbuild build.proj /m /p:Architecture=$Architecture $ExtraParameters
   if ($LASTEXITCODE -ne 0) { throw "Failed to build" } 
