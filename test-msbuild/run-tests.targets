@@ -97,6 +97,23 @@
         <Exec Command="dotnet pack $(ProjectPath)" WorkingDirectory="$(OutOfTreeDirectory)" />
     </Target>
 
+
+    <Target Name="TestMultipleLibraryInSameDir">
+        <PropertyGroup>
+            <ProjectDirectory>$(MSBuildThisFileDirectory)TestMultipleLibraryInSameDir</ProjectDirectory>
+            <Project1FileName>Test1Library.fsproj</Project1FileName>
+            <Project2FileName>Test2Library.fsproj</Project2FileName>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(ProjectDirectory)\bin; $(ProjectDirectory)\obj" />
+        <Exec Command="dotnet restore $(Project1FileName)" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build $(Project1FileName)" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet pack $(Project1FileName)" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet restore $(Project2FileName)" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet build $(Project2FileName)" WorkingDirectory="$(ProjectDirectory)" />
+        <Exec Command="dotnet pack $(Project2FileName)" WorkingDirectory="$(ProjectDirectory)" />
+    </Target>
+
     <Target Name="TestLibraryCrossGen">
         <PropertyGroup>
             <ProjectDirectory>$(MSBuildThisFileDirectory)TestLibraryCrossGen</ProjectDirectory>
@@ -183,11 +200,17 @@
         <AllTests Include="SmokeTestExamplesPreview3" />
     </ItemGroup>
 
+    <ItemGroup>
+        <FailingTests Include="TestMultipleLibraryInSameDir" />
+    </ItemGroup>
+
     <Target Name="PrepareTests">
         <MakeDir Directories="$(ProjectDirectory)src\FSharp.NET.Sdk\bin\Debug" />
     </Target>
 
     <Target Name="Test" DependsOnTargets="PrepareTests; @(AllTests)" />
+
+    <Target Name="FailingTest" DependsOnTargets="PrepareTests; @(FailingTests)" />
 
     <Target Name="TestSuiteInfo">
         <ItemGroup>
