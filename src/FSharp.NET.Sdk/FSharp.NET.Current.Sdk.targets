@@ -70,4 +70,6 @@ run CoreCompile multiple times, each time passing the current TargetFramework (s
 
     <Import Project="$(FSharpTargetsPath)" />
 
+    <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+
 </Project>

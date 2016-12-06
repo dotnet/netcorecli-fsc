@@ -14,6 +14,7 @@ WARNING:  You CAN MODIFY this file, doesnt matter if you are not knowledgeable a
 
   <PropertyGroup>
     <WarningLevel>4</WarningLevel>
+    <FSharpLanguageTargets>$(MSBuildThisFileDirectory)\FSharp.NET.Current.Sdk.targets</FSharpLanguageTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
