@@ -1,0 +1,51 @@
+using System;
+namespace Microsoft.DotNet.Cli.Utils
+{
+    public abstract class AbstractPathBasedCommandResolver : ICommandResolver
+    {
+        protected IEnvironmentProvider _environment;
+        protected IPlatformCommandSpecFactory _commandSpecFactory;
+
+        public AbstractPathBasedCommandResolver(IEnvironmentProvider environment,
+            IPlatformCommandSpecFactory commandSpecFactory)
+        {
+            if (environment == null)
+            {
+                throw new ArgumentNullException(nameof(environment));
+            }
+
+            if (commandSpecFactory == null)
+            {
+                throw new ArgumentNullException(nameof(commandSpecFactory));
+            }
+
+            _environment = environment;
+            _commandSpecFactory = commandSpecFactory;
+        }
+
+        public CommandSpec Resolve(CommandResolverArguments commandResolverArguments)
+        {
+            if (commandResolverArguments.CommandName == null)
+            {
+                return null;
+            }
+
+            var commandPath = ResolveCommandPath(commandResolverArguments);
+
+            if (commandPath == null)
+            {
+                return null;
+            }
+
+            return _commandSpecFactory.CreateCommandSpec(
+                    commandResolverArguments.CommandName,
+                    commandResolverArguments.CommandArguments.OrEmptyIfNull(),
+                    commandPath,
+                    GetCommandResolutionStrategy(),
+                    _environment);
+        }
+
+        internal abstract string ResolveCommandPath(CommandResolverArguments commandResolverArguments);
+        internal abstract CommandResolutionStrategy GetCommandResolutionStrategy();
+    }
+}

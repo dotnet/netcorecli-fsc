@@ -59,7 +59,7 @@ function Do-preview3
 
   Using-Sdk $sdkVersion
 
-  dotnet msbuild build.proj /m /p:Architecture=$Architecture $ExtraParameters
+  & "$rootDir\scripts\run-tests.ps1"
   if ($LASTEXITCODE -ne 0) { throw "Failed to build" } 
 }
 

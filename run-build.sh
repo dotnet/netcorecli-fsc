@@ -175,4 +175,4 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 echo "${args[@]}"
 
-dotnet msbuild build.proj /m /p:Architecture=$ARCHITECTURE "${args[@]}"
+$REPOROOT/scripts/run-tests.sh
