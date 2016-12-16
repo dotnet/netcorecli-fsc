@@ -117,7 +117,7 @@ this file.
 
             <DotnetCompileFscResponseLines Include="@(ReferencePath -> '--reference:%(FullPath)')" />
 
-            <DotnetCompileFscResponseLines Include="@(Compile)" />
+            <DotnetCompileFscResponseLines Include="@(Compile -> '%(FullPath)')" />
         </ItemGroup>
 
         <!--STEP2 Create the dotnet-compile-fsc response file-->
