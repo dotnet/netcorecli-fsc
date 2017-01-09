@@ -240,3 +240,4 @@ _Pvt_Extensions
 test/test-dotnet-new/
 
 .dotnetsdk
+src/FSharp.NET.Sdk/NuGet.Config
