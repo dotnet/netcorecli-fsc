@@ -2,42 +2,46 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+
     <AssemblyName>FSharp.NET.Sdk</AssemblyName>
+
     <PackageId>FSharp.NET.Sdk</PackageId>
-    <PackageTags>f#;sdk;fsharp;msbuild</PackageTags>
+    <Authors>Enrico Sada</Authors>
+    <Description>F# and .NET Core SDK working together</Description>
     <PackageReleaseNotes>Compatible with .NET Core Sdk preview4/rc3</PackageReleaseNotes>
+    <PackageTags>f#;sdk;fsharp;msbuild</PackageTags>
     <PackageProjectUrl>https://github.com/dotnet/netcorecli-fsc</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/dotnet/netcorecli-fsc</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="FSharp.NET.Current.Sdk.targets">
-      <PackagePath>build</PackagePath>
+    <Content Include="build/FSharp.NET.Current.Sdk.targets">
+      <PackagePath>.</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="FSharp.NET.Core.Sdk.targets">
-      <PackagePath>build</PackagePath>
+    <Content Include="build/FSharp.NET.Core.Sdk.targets">
+      <PackagePath>.</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="FSharp.NET.Sdk.props">
-      <PackagePath>build</PackagePath>
+    <Content Include="build/FSharp.NET.Sdk.props">
+      <PackagePath>.</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="FSharp.NET.CrossTargeting.Sdk.targets">
-      <PackagePath>buildCrossTargeting</PackagePath>
+    <Content Include="buildCrossTargeting/FSharp.NET.CrossTargeting.Sdk.targets">
+      <PackagePath>.</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="Sdk\Sdk.targets">
-      <PackagePath>Sdk</PackagePath>
+    <Content Include="Sdk/Sdk.targets">
+      <PackagePath>.</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="Sdk\Sdk.OnRestore.targets">
-      <PackagePath>Sdk</PackagePath>
+    <Content Include="Sdk/Sdk.OnRestore.targets">
+      <PackagePath>.</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="Sdk\Sdk.props">
-      <PackagePath>Sdk</PackagePath>
+    <Content Include="Sdk/Sdk.props">
+      <PackagePath>.</PackagePath>
       <Pack>true</Pack>
     </Content>
   </ItemGroup>

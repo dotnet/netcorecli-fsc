@@ -33,7 +33,7 @@ namespace NetcoreCliFsc.DotNet.Tests
         {
             var props = new Dictionary<string,string>() 
             {
-                { "FSharpNETSdkVersion", GetEnvironmentVariable("TEST_SUITE_FSHARP_NET_PKG_VERSION")},
+                { "FSharpNETSdkVersion", GetEnvironmentVariable("TEST_SUITE_FSHARP_NET_SDK_PKG_VERSION")},
                 { "MicrosoftFSharpCorenetcoreVersion", GetEnvironmentVariable("TEST_SUITE_MS_FSHARP_CORE_PKG_VERSION")},
             };
 
