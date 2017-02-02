@@ -53,9 +53,11 @@ function Using-Sdk ([string] $sdkVersion)
 
 function Do-preview3
 {
-  Install-DotnetSdk '1.0.0-preview3-004056'
+  $sdkVersion = '1.0.0-preview2-1-003177'
 
-  Using-Sdk '1.0.0-preview3-004056'
+  Install-DotnetSdk $sdkVersion
+
+  Using-Sdk $sdkVersion
 
   dotnet msbuild build.proj /m /p:Architecture=$Architecture $ExtraParameters
   if ($LASTEXITCODE -ne 0) { throw "Failed to build" } 
