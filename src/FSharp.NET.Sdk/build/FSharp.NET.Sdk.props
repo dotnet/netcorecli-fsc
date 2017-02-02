@@ -14,6 +14,10 @@ WARNING:  You CAN MODIFY this file, doesnt matter if you are not knowledgeable a
 
   <PropertyGroup>
     <WarningLevel>4</WarningLevel>
+
+    <!-- disable wilcard include of Compile items, file ordering is a feature -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+
     <FSharpLanguageTargets>$(MSBuildThisFileDirectory)\FSharp.NET.Current.Sdk.targets</FSharpLanguageTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
