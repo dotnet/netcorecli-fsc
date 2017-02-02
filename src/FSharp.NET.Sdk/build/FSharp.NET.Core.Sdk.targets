@@ -128,7 +128,7 @@ this file.
         <WriteLinesToFile File="$(DotnetCompileFscResponseFilePath)" Lines="@(DotnetCompileFscResponseLines)" Overwrite="True" />
 
         <!--STEP3 HACK: invoke dotnet-compile-fsc because already works-->
-        <Exec Command="dotnet compile-fsc @$(DotnetCompileFscResponseFilePath)"/>
+        <Exec Command='dotnet compile-fsc "@$(DotnetCompileFscResponseFilePath)" ' />
     </Target>
 
     <!--End Required Task by .Common.target-->

@@ -112,5 +112,24 @@ namespace NetcoreCliFsc.DotNet.Tests
                 .Execute($"run {LogArgs}")
                 .Should().Pass();
         }
+
+        [Fact]
+        public void TestPathWithBlank()
+        {
+            var rootPath = Path.Combine(Temp.CreateDirectory().Path, "path with blank");
+
+            TestAssets.CopyDirTo("TestLibrary", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"build {LogArgs}")
+                .Should().Pass();
+        }
     }
 }
