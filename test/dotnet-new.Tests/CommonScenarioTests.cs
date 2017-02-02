@@ -7,15 +7,40 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using FluentAssertions;
+using static System.Environment;
 
 namespace NetcoreCliFsc.DotNet.Tests
 {
     public class CommonScenario : TestBase
     {
-        private static string NugetConfigWithDevFeedPath 
+        private static IEnumerable<string> NugetConfigSources
         {
-            get { return Path.Combine(RepoRoot, "NuGet.withDevFeed.Config"); }
+            get 
+            { 
+                yield return "https://api.nuget.org/v3/index.json";
+                var pkgsDir = Path.Combine(RepoRoot, "test", "packagesToTest");
+                if (Directory.Exists(pkgsDir))
+                    yield return pkgsDir;
+            }
         }
+
+        private static string RestoreSourcesArgs(IEnumerable<string> sources)
+        {
+            return string.Join(" ", sources.Select(x => $"--source \"{x}\""));
+        }
+
+        private static string RestoreProps()
+        {
+            var props = new Dictionary<string,string>() 
+            {
+                { "FSharpNETSdkVersion", GetEnvironmentVariable("TEST_SUITE_FSHARP_NET_PKG_VERSION")},
+                { "MicrosoftFSharpCorenetcoreVersion", GetEnvironmentVariable("TEST_SUITE_MS_FSHARP_CORE_PKG_VERSION")},
+            };
+
+            return string.Join(" ", props.Where(kv => kv.Value != null).Select(kv => $"/p:{kv.Key}={kv.Value}") );
+        }
+
+        private static string LogArgs => "-v n";
 
         [Fact]
         public void TestAppWithArgs()
@@ -25,16 +50,18 @@ namespace NetcoreCliFsc.DotNet.Tests
             TestAssets.CopyDirTo("TestAppWithArgs", rootPath);
             TestAssets.CopyDirTo("TestSuiteProps", rootPath);
 
-            new TestCommand("dotnet") { WorkingDirectory = rootPath }
-                .Execute($"restore --no-cache -v n --configfile \"{NugetConfigWithDevFeedPath}\"")
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
-            new TestCommand("dotnet") { WorkingDirectory = rootPath }
-                .Execute("build -v n")
+            test("dotnet")
+                .Execute($"build {LogArgs}")
                 .Should().Pass();
 
-            new TestCommand("dotnet") { WorkingDirectory = rootPath }
-                .Execute("run -v n")
+            test("dotnet")
+                .Execute($"run {LogArgs}")
                 .Should().Pass();
         }
 
@@ -46,12 +73,14 @@ namespace NetcoreCliFsc.DotNet.Tests
             TestAssets.CopyDirTo("TestLibrary", rootPath);
             TestAssets.CopyDirTo("TestSuiteProps", rootPath);
 
-            new TestCommand("dotnet") { WorkingDirectory = rootPath }
-                .Execute($"restore --no-cache -v n --configfile \"{NugetConfigWithDevFeedPath}\"")
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
-            new TestCommand("dotnet") { WorkingDirectory = rootPath }
-                .Execute("build -v n")
+            test("dotnet")
+                .Execute($"build {LogArgs}")
                 .Should().Pass();
         }
 
@@ -67,18 +96,20 @@ namespace NetcoreCliFsc.DotNet.Tests
                 TestAssets.CopyDirTo("TestSuiteProps", projDir);
             }
 
-            new TestCommand("dotnet") { WorkingDirectory = Path.Combine(rootPath, "TestApp") }
-                .Execute($"restore --no-cache -v n --configfile \"{NugetConfigWithDevFeedPath}\"")
-                .Should().Pass();
-
             var appDir = Path.Combine(rootPath, "TestApp");
 
-            new TestCommand("dotnet") { WorkingDirectory = appDir }
-                .Execute("build -v n")
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = appDir };
+
+            test("dotnet")
+                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
-            new TestCommand("dotnet") { WorkingDirectory = appDir }
-                .Execute("run -v n")
+            test("dotnet")
+                .Execute($"build {LogArgs}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"run {LogArgs}")
                 .Should().Pass();
         }
     }
