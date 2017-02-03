@@ -123,12 +123,18 @@ this file.
         <!--STEP2 Create the dotnet-compile-fsc response file-->
         <PropertyGroup>
             <DotnetCompileFscResponseFilePath>$(_IntermediateOutputPathFull)dotnet-compile.rsp</DotnetCompileFscResponseFilePath>
+
+            <!-- ref https://github.com/Microsoft/msbuild/issues/1669
+                 the dotnet in PATH can be different from the dotnet who run msbuild,
+                 so i need to specify the full path. -->
+            <_DotNetHostExecutableName>$(MSBuildExtensionsPath)/../../dotnet</_DotNetHostExecutableName>
+            <_DotNetHostExecutableName Condition=" '$(OS)' == 'Windows_NT' ">$(_DotNetHostExecutableName).exe</_DotNetHostExecutableName>
         </PropertyGroup>
 
         <WriteLinesToFile File="$(DotnetCompileFscResponseFilePath)" Lines="@(DotnetCompileFscResponseLines)" Overwrite="True" />
 
         <!--STEP3 HACK: invoke dotnet-compile-fsc because already works-->
-        <Exec Command='dotnet compile-fsc "@$(DotnetCompileFscResponseFilePath)" ' />
+        <Exec Command='"$(_DotNetHostExecutableName)" compile-fsc "@$(DotnetCompileFscResponseFilePath)" ' />
     </Target>
 
     <!--End Required Task by .Common.target-->

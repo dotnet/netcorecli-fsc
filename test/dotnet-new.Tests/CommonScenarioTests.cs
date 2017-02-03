@@ -131,5 +131,79 @@ namespace NetcoreCliFsc.DotNet.Tests
                 .Execute($"build {LogArgs}")
                 .Should().Pass();
         }
+
+        private string GetCurrentRID()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            Func<string,TestCommand> test = n => new TestCommand(n) { WorkingDirectory = rootPath };
+            
+            var result = test("dotnet").ExecuteWithCapturedOutput($"--info");
+
+            result.Should().Pass();
+
+            var dotnetInfo = result.StdOut;
+
+            string rid = 
+                dotnetInfo
+                .Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .Where(s => s.StartsWith("RID:"))
+                .Select(s => s.Replace("RID:", "").Trim())
+                .FirstOrDefault();
+
+            return rid;
+        }
+
+        private void CreateNoopExe(string intoDir, string name, bool fail = false)
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("Noop", rootPath);
+
+            Func<string,TestCommand> test = n => new TestCommand(n) { WorkingDirectory = rootPath };
+
+            string rid = GetCurrentRID();
+            string msbuildArgs = $"/p:AssemblyName={name} " + (fail? "/p:Fail=true" : "");
+
+            test("dotnet")
+                .Execute($"restore -r {rid} --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()} {msbuildArgs}")
+                .Should().Pass();
+            
+            test("dotnet")
+                .Execute($"publish -r {rid} -o \"{intoDir}\" {msbuildArgs}")
+                .Should().Pass();
+        }
+
+        [Fact]
+        public void DifferentDotnetInPATH()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            var fakeDotnetDir = Path.Combine(rootPath, "dotnetsdk");
+
+            Directory.CreateDirectory(fakeDotnetDir);
+            CreateNoopExe(fakeDotnetDir, "dotnet", fail : true);
+
+            var appDir = Path.Combine(rootPath, "TestApp");
+
+            TestAssets.CopyDirTo("TestLibrary", appDir);
+            TestAssets.CopyDirTo("TestSuiteProps", appDir);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = appDir };
+
+            test("dotnet")
+                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            var dotnetPath = Microsoft.DotNet.Cli.Utils.Env.GetCommandPath("dotnet");
+
+            var newPATHEnvVar = fakeDotnetDir + Path.PathSeparator + GetEnvironmentVariable("PATH");
+            
+            test(dotnetPath)
+                .WithEnvironmentVariable("PATH", newPATHEnvVar)
+                .Execute($"build {LogArgs}")
+                .Should().Pass();
+        }
     }
 }
