@@ -24,6 +24,11 @@ namespace NetcoreCliFsc.DotNet.Tests
             }
         }
 
+        private static string NugetPackagesDir
+        {
+            get { return Path.Combine(RepoRoot, "test", "packages"); }
+        }
+
         private static string RestoreSourcesArgs(IEnumerable<string> sources)
         {
             return string.Join(" ", sources.Select(x => $"--source \"{x}\""));
@@ -40,6 +45,11 @@ namespace NetcoreCliFsc.DotNet.Tests
             return string.Join(" ", props.Where(kv => kv.Value != null).Select(kv => $"/p:{kv.Key}={kv.Value}") );
         }
 
+        private static string RestoreDefaultArgs
+        {
+            get { return $"--no-cache {LogArgs} --packages \"{NugetPackagesDir}\""; }
+        }
+
         private static string LogArgs => "-v n";
 
         [Fact]
@@ -53,7 +63,7 @@ namespace NetcoreCliFsc.DotNet.Tests
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
 
             test("dotnet")
-                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
             test("dotnet")
@@ -76,7 +86,7 @@ namespace NetcoreCliFsc.DotNet.Tests
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
 
             test("dotnet")
-                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
             test("dotnet")
@@ -101,7 +111,7 @@ namespace NetcoreCliFsc.DotNet.Tests
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = appDir };
 
             test("dotnet")
-                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
             test("dotnet")
@@ -124,7 +134,7 @@ namespace NetcoreCliFsc.DotNet.Tests
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
 
             test("dotnet")
-                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
             test("dotnet")
@@ -167,7 +177,7 @@ namespace NetcoreCliFsc.DotNet.Tests
             string msbuildArgs = $"/p:AssemblyName={name} " + (fail? "/p:Fail=true" : "");
 
             test("dotnet")
-                .Execute($"restore -r {rid} --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()} {msbuildArgs}")
+                .Execute($"restore -r {rid} {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()} {msbuildArgs}")
                 .Should().Pass();
             
             test("dotnet")
@@ -193,7 +203,7 @@ namespace NetcoreCliFsc.DotNet.Tests
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = appDir };
 
             test("dotnet")
-                .Execute($"restore --no-cache {LogArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
             var dotnetPath = Microsoft.DotNet.Cli.Utils.Env.GetCommandPath("dotnet");

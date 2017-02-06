@@ -17,16 +17,18 @@ if($Help)
 }
 
 #make path absolute
-$rootDir = Split-Path -parent (Split-Path -parent $PSCommandPath)
+$RepoRoot = "$PSScriptRoot"
+
+$sdkVersion = '1.0.0-rc3-004530'
 
 function Install-DotnetSdk([string] $sdkVersion)
 {
     Write-Host "# Install .NET Core Sdk versione '$sdkVersion'" -foregroundcolor "magenta"
-    $sdkInstallScriptUrl = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview3/scripts/obtain/dotnet-install.ps1"
+    $sdkInstallScriptUrl = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-rc3/scripts/obtain/dotnet-install.ps1"
     $sdkInstallScriptPath = ".dotnetsdk\dotnet_cli_install.ps1"
     Write-Host "Downloading sdk install script '$sdkInstallScriptUrl' to '$sdkInstallScriptPath'"
-    New-Item "$rootDir\.dotnetsdk" -Type directory -ErrorAction Ignore
-    Invoke-WebRequest $sdkInstallScriptUrl -OutFile "$rootDir\$sdkInstallScriptPath"
+    New-Item "$RepoRoot\.dotnetsdk" -Type directory -ErrorAction Ignore
+    Invoke-WebRequest $sdkInstallScriptUrl -OutFile "$RepoRoot\$sdkInstallScriptPath"
 
     Write-Host "Running sdk install script..."
     ./.dotnetsdk/dotnet_cli_install.ps1 -InstallDir ".dotnetsdk\sdk-$sdkVersion" -Channel "preview" -version $sdkVersion
@@ -45,30 +47,16 @@ function Run-Cmd
 
 function Using-Sdk ([string] $sdkVersion)
 {
-  $sdkPath = "$rootDir\.dotnetsdk\sdk-$sdkVersion"
+  $sdkPath = "$RepoRoot\.dotnetsdk\sdk-$sdkVersion"
   Write-Host "# Using sdk '$sdkVersion'" -foregroundcolor "magenta"
   $env:Path = "$sdkPath;$env:Path"
   Run-Cmd "dotnet" "--version"
 }
 
-function Do-preview3
-{
-  $sdkVersion = '1.0.0-preview2-1-003177'
-
-  Install-DotnetSdk $sdkVersion
-
-  Using-Sdk $sdkVersion
-
-  dotnet msbuild build.proj /m /p:Architecture=$Architecture $ExtraParameters
-  if ($LASTEXITCODE -ne 0) { throw "Failed to build" } 
-}
-
 # main
-try {
-  Push-Location $PWD
+Install-DotnetSdk $sdkVersion
 
-  Do-preview3
-}
-finally {
-  Pop-Location
-}
+Using-Sdk $sdkVersion
+
+dotnet msbuild build.proj /m /v:diag /p:Architecture=$Architecture $ExtraParameters
+if ($LASTEXITCODE -ne 0) { throw "Failed to build" } 

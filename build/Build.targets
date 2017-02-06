@@ -1,0 +1,31 @@
+<Project ToolsVersion="15.0">
+
+    <Target Name="Package"
+            DependsOnTargets="RestoreSrcPackages">
+
+        <Exec Command='dotnet pack --no-build --output "$(ArtifactsDir)/nupkgs" /p:Version=$(FSharpSdkVersion)' 
+              WorkingDirectory="$(RepoRoot)/src/FSharp.Sdk"/>
+
+        <Exec Command='dotnet pack --no-build --output "$(ArtifactsDir)/nupkgs" /p:Version=$(FSharpNETSdkVersion)' 
+              WorkingDirectory="$(RepoRoot)/src/FSharp.NET.Sdk"/>
+    </Target>
+
+    <Target Name="SetupRestoreSrcPackagesInputsOutputs">
+        <!-- List of test projects to restore -->
+
+        <ItemGroup>
+            <RestoreSrcPackagesInput Include="$(RepoRoot)/src/FSharp.NET.Sdk/FSharp.NET.Sdk.csproj" />
+            <RestoreSrcPackagesInput Include="$(RepoRoot)/src/FSharp.Sdk/FSharp.Sdk.csproj" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="RestoreSrcPackages"
+            DependsOnTargets="SetupRestoreSrcPackagesInputsOutputs"
+            Inputs="@(RestoreSrcPackagesInput)"
+            Outputs="@(RestoreSrcPackagesInput->'%(RelativeDir)/obj/project.assets.json');@(RestoreSrcPackagesInput->'%(RelativeDir)/obj/%(Filename).csproj.nuget.g.props')">
+        <!-- Restore test projects, if needed (with lock files up-to-date check) -->
+
+        <Exec Command='dotnet restore "%(RestoreSrcPackagesInput.FullPath)" --packages "$(NuGetPackageRoot)" --no-cache -v n"' />
+    </Target>
+
+</Project>
