@@ -24,9 +24,20 @@
 
     <ExeExtension>.exe</ExeExtension>
     <ExeExtension Condition=" '$(OS)' != 'Windows_NT' "></ExeExtension>
+
+    <NuGetPackageRoot>$(RepoRoot)/packages</NuGetPackageRoot>
+    <ArtifactsDir>$(RepoRoot)/artifacts</ArtifactsDir>
   </PropertyGroup>
 
-  <Target DependsOnTargets="$(CLITargets)" Name="BuildTheWholeCli"></Target>
+  <PropertyGroup>
+    <FSharpNETSdkVersion>1.0.0-beta-060000</FSharpNETSdkVersion>
+    <FSharpSdkVersion>1.0.0-beta-060000</FSharpSdkVersion>
+  </PropertyGroup>
 
-  <Import Project="test-msbuild/run-tests.targets" />
+  <Target Name="BuildTheWholeCli"
+          DependsOnTargets="$(CLITargets)" />
+
+  <Import Project="$(RepoRoot)/build/Build.targets" />
+  <Import Project="$(RepoRoot)/build/Test.targets" />
+
 </Project>

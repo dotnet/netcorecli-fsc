@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3;net40</TargetFramework>
+
+    <AssemblyName>FSharp.NET.Sdk</AssemblyName>
+
+    <PackageId>FSharp.NET.Sdk</PackageId>
+    <Authors>Enrico Sada</Authors>
+    <Description>F# and .NET Core SDK working together</Description>
+    <PackageReleaseNotes>Compatible with .NET Core Sdk preview4/rc3</PackageReleaseNotes>
+    <PackageTags>f#;sdk;fsharp;msbuild</PackageTags>
+    <PackageProjectUrl>https://github.com/dotnet/netcorecli-fsc</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/dotnet/netcorecli-fsc</RepositoryUrl>
+
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="build/FSharp.NET.Current.Sdk.targets">
+      <PackagePath>.</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="build/FSharp.NET.Core.Sdk.targets">
+      <PackagePath>.</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="build/FSharp.NET.Sdk.props">
+      <PackagePath>.</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+    <Content Include="buildCrossTargeting/FSharp.NET.CrossTargeting.Sdk.targets">
+      <PackagePath>.</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,63 @@
+<Project ToolsVersion="15.0">
+
+    <Target Name="Test"
+            DependsOnTargets="Package;RestoreTestPackages;PrepareTestSuite">
+
+        <PropertyGroup>
+            <_CommandText><![CDATA[
+set TEST_SUITE_FSHARP_NET_SDK_PKG_VERSION=$(FSharpNETSdkVersionToTest)
+dotnet test -c $(Configuration) --logger trx
+            ]]></_CommandText>
+        </PropertyGroup>
+
+        <Exec Command="$(_CommandText)"
+              WorkingDirectory="$(RepoRoot)/test/dotnet-new.Tests" />
+
+    </Target>
+
+    <Target Name="PrepareTestSuite">
+        <!--Cleanup nuget cache, and move nupkg under test in 'packagesToTest' directory-->
+
+        <PropertyGroup>
+            <FSharpSdkVersionToTest>$(FSharpSdkVersion)</FSharpSdkVersionToTest>
+            <FSharpNETSdkVersionToTest>$(FSharpNETSdkVersion)</FSharpNETSdkVersionToTest>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <_NupkgsToTest Include="$(ArtifactsDir)/nupkgs/FSharp.Sdk.$(FSharpSdkVersionToTest).nupkg" />
+            <_NupkgsToTest Include="$(ArtifactsDir)/nupkgs/FSharp.NET.Sdk.$(FSharpNETSdkVersionToTest).nupkg" />
+        </ItemGroup>
+
+        <!--Add nupkgs under test in 'packagesToTest' directory-->
+        <RemoveDir Directories="$(RepoRoot)/test/packagesToTest" />
+
+        <Copy SourceFiles="@(_NupkgsToTest)"
+              DestinationFolder="$(RepoRoot)/test/packagesToTest" />
+
+        <!--Remove nupkgs from test suite cache-->
+        <RemoveDir Directories="$(RepoRoot)/test/packages/fsharp.sdk" />
+        <RemoveDir Directories="$(RepoRoot)/test/packages/fsharp.net.sdk" />
+        <RemoveDir Directories="$(RepoRoot)/test/packages/dotnet-compile-fsc" />
+    </Target>
+
+    <Target Name="SetupRestoreTestPackagesInputsOutputs">
+        <!-- List of test projects to restore -->
+
+        <ItemGroup>
+            <RestoreTestPackagesInput Include="$(RepoRoot)/test/dotnet-new.Tests/dotnet-new.Tests.csproj" />
+            <RestoreTestPackagesInput Include="$(RepoRoot)/test/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj" />
+            <RestoreTestPackagesInput Include="$(RepoRoot)/test/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj" />
+        </ItemGroup>
+    </Target>
+
+    <Target Name="RestoreTestPackages"
+            DependsOnTargets="SetupRestoreTestPackagesInputsOutputs"
+            Inputs="@(RestoreTestPackagesInput)"
+            Outputs="@(RestoreTestPackagesInput->'%(RelativeDir)/obj/project.assets.json');@(RestoreTestPackagesInput->'%(RelativeDir)/obj/%(Filename).csproj.nuget.g.props')">
+        <!-- Restore test projects, if needed (with lock files up-to-date check) -->
+
+        <Exec Command='dotnet restore "%(RestoreTestPackagesInput.FullPath)" --packages "$(NuGetPackageRoot)" --no-cache -v n"' />
+    </Target>
+    
+
+</Project>
