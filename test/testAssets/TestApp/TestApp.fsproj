@@ -14,14 +14,8 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.NET.Sdk" Version="$(FSharpNETSdkVersion)" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.FSharp.Core.netcore" Version="$(MicrosoftFSharpCorenetcoreVersion)" />
+    <PackageReference Include="FSharp.Core" Version="$(FSharpCorePkgVersion)" />
     <ProjectReference Include="../TestLibrary/TestLibrary.fsproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="dotnet-compile-fsc">
-      <Version>1.0.0-preview2-020000</Version>
-    </DotNetCliToolReference>
   </ItemGroup>
 
 </Project>

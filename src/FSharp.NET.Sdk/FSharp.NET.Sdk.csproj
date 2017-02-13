@@ -38,9 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.FSharp.Compiler.Sdk.netcore" Version="1.0.0-rc-170113">
-      <PrivateAssets>Compile</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="FSharp.Compiler.Tools" Version="4.1.0-b695" PrivateAssets="Compile" />
   </ItemGroup>
 
 </Project>

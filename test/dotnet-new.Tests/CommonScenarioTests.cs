@@ -21,6 +21,9 @@ namespace NetcoreCliFsc.DotNet.Tests
                 var pkgsDir = Path.Combine(RepoRoot, "test", "packagesToTest");
                 if (Directory.Exists(pkgsDir))
                     yield return pkgsDir;
+                var pkgs2Dir = Path.Combine(RepoRoot, "test", "externalPackages");
+                if (Directory.Exists(pkgs2Dir))
+                    yield return pkgs2Dir;
             }
         }
 
