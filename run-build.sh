@@ -180,4 +180,4 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 echo "${args[@]}"
 
-dotnet msbuild build.proj /m /p:Architecture=$ARCHITECTURE "${args[@]}"
+dotnet msbuild build.proj /m /v:diag /p:Architecture=$ARCHITECTURE "${args[@]}"
