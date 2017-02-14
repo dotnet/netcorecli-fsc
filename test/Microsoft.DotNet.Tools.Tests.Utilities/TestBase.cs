@@ -21,7 +21,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
         private TempRoot _temp;
         private static string s_repoRoot;
 
-        protected static string RepoRoot
+        public static string RepoRoot
         {
             get
             {

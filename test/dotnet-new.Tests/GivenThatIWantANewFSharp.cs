@@ -7,39 +7,38 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using FluentAssertions;
+using static NetcoreCliFsc.Tests.TestSuite;
 
 namespace NetcoreCliFsc.Tests
 {
     public class GivenThatIWantANewFSApp : TestBase
     {
-        private static string NugetConfigWithDevFeedPath 
-        {
-            get { return Path.Combine(RepoRoot, "NuGet.withDevFeed.Config"); }
-        }
-
         [Theory]
         [InlineData("console")]
         [InlineData("lib")]
+        [InlineData("web")]
         public void When_dotnet_build_is_invoked_Then_project_builds_without_warnings(string type)
         {
             var rootPath = Temp.CreateDirectory().Path;
 
-            new TestCommand("dotnet") { WorkingDirectory = rootPath }
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
                 .Execute($"new --lang fsharp --type {type}")
                 .Should().Pass();
 
-            new TestCommand("dotnet") { WorkingDirectory = rootPath }
-                .Execute($"restore --no-cache -v n --configfile \"{NugetConfigWithDevFeedPath}\"")
+            test("dotnet")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)}")
                 .Should().Pass();
 
-            var buildResult = new TestCommand("dotnet") { WorkingDirectory = rootPath }
-                .Execute("build -v n")
+            test("dotnet")
+                .Execute($"build {LogArgs}")
                 .Should().Pass();
 
             if (type == "console")
             {
-                var runResult = new TestCommand("dotnet") { WorkingDirectory = rootPath }
-                    .Execute("run -v n")
+                test("dotnet")
+                    .Execute($"run {LogArgs}")
                     .Should().Pass();
             }
         }

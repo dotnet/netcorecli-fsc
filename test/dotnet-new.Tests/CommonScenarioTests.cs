@@ -9,65 +9,22 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 using FluentAssertions;
 using static System.Environment;
+using static NetcoreCliFsc.Tests.TestSuite;
 
 namespace NetcoreCliFsc.Tests
 {
     public class CommonScenario : TestBase
     {
-        private static IEnumerable<string> RepoNugetConfigFeeds()
-        {
-            var doc = XDocument.Load(Path.Combine(RepoRoot, "NuGet.Config"));
-            return doc.Element("configuration")
-                      .Element("packageSources")
-                      .Elements("add")
-                      .Attributes("value")
-                      .Select(a => a.Value)
-                      .ToList();
-        }
-
-        private static IEnumerable<string> NugetConfigSources
-        {
-            get 
-            {
-                foreach (var feed in RepoNugetConfigFeeds())
-                    yield return feed;
-
-                var pkgsDir = Path.Combine(RepoRoot, "test", "packagesToTest");
-                if (Directory.Exists(pkgsDir))
-                    yield return pkgsDir;
-                var pkgs2Dir = Path.Combine(RepoRoot, "test", "externalPackages");
-                if (Directory.Exists(pkgs2Dir))
-                    yield return pkgs2Dir;
-            }
-        }
-
-        private static string NugetPackagesDir
-        {
-            get { return Path.Combine(RepoRoot, "test", "packages"); }
-        }
-
-        private static string RestoreSourcesArgs(IEnumerable<string> sources)
-        {
-            return string.Join(" ", sources.Select(x => $"--source \"{x}\""));
-        }
-
         private static string RestoreProps()
         {
             var props = new Dictionary<string,string>() 
             {
                 { "FSharpNETSdkVersion", GetEnvironmentVariable("TEST_SUITE_FSHARP_NET_SDK_PKG_VERSION")},
-                { "MicrosoftFSharpCorenetcoreVersion", GetEnvironmentVariable("TEST_SUITE_MS_FSHARP_CORE_PKG_VERSION")},
+                { "FSharpCorenetcoreVersion", GetEnvironmentVariable("TEST_SUITE_MS_FSHARP_CORE_PKG_VERSION")},
             };
 
             return string.Join(" ", props.Where(kv => kv.Value != null).Select(kv => $"/p:{kv.Key}={kv.Value}") );
         }
-
-        private static string RestoreDefaultArgs
-        {
-            get { return $"--no-cache {LogArgs} --packages \"{NugetPackagesDir}\""; }
-        }
-
-        private static string LogArgs => "-v n";
 
         [Fact]
         public void TestAppWithArgs()
