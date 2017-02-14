@@ -20,7 +20,7 @@ namespace NetcoreCliFsc.Tests
             var props = new Dictionary<string,string>() 
             {
                 { "FSharpNETSdkVersion", GetEnvironmentVariable("TEST_SUITE_FSHARP_NET_SDK_PKG_VERSION")},
-                { "FSharpCorenetcoreVersion", GetEnvironmentVariable("TEST_SUITE_MS_FSHARP_CORE_PKG_VERSION")},
+                { "FSharpCorePkgVersion", GetEnvironmentVariable("TEST_SUITE_FSHARP_CORE_PKG_VERSION")},
             };
 
             return string.Join(" ", props.Where(kv => kv.Value != null).Select(kv => $"/p:{kv.Key}={kv.Value}") );
