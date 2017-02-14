@@ -97,11 +97,19 @@ this file.
             <TargetProfile Condition=" '$(TargetFrameworkIdentifier)' != '.NETFramework' " >netcore</TargetProfile>
 
             <_OtherFscFlags>--simpleresolution --nocopyfsharpcore</_OtherFscFlags>
+
+            <!-- ref https://github.com/Microsoft/msbuild/issues/1669
+                 the dotnet in PATH can be different from the dotnet who run msbuild,
+                 so i need to specify the full path. -->
+            <_DotNetHostExecutableName>dotnet</_DotNetHostExecutableName>
+            <_DotNetHostExecutableName Condition=" '$(OS)' == 'Windows_NT' ">$(_DotNetHostExecutableName).exe</_DotNetHostExecutableName>
+            <_DotNetHostExecutableDirectory>$(MSBuildExtensionsPath)/../..</_DotNetHostExecutableDirectory>
+            <_DotNetHostExecutablePath>$(_DotNetHostExecutableDirectory)/$(_DotNetHostExecutableName)</_DotNetHostExecutablePath>
         </PropertyGroup>
 
         <PropertyGroup Condition=" '$(DontRunFscWithDotnet)' == '' ">
-            <_FscTask_FscToolExe>dotnet.exe</_FscTask_FscToolExe>
-            <_FscTask_FscToolPath>$(MSBuildExtensionsPath)/../..</_FscTask_FscToolPath>
+            <_FscTask_FscToolExe>$(_DotNetHostExecutableName)</_FscTask_FscToolExe>
+            <_FscTask_FscToolPath>$(_DotNetHostExecutableDirectory)</_FscTask_FscToolPath>
             <_FscTask_DotnetFscCompilerPath> "$(FscToolPath)/$(FscToolExe)"</_FscTask_DotnetFscCompilerPath>
         </PropertyGroup>
 
@@ -109,12 +117,6 @@ this file.
             <_FscTask_FscToolExe>$(FscToolExe)</_FscTask_FscToolExe>
             <_FscTask_FscToolPath>$(FscToolPath)</_FscTask_FscToolPath>
             <_FscTask_DotnetFscCompilerPath></_FscTask_DotnetFscCompilerPath>
-
-            <!-- ref https://github.com/Microsoft/msbuild/issues/1669
-                 the dotnet in PATH can be different from the dotnet who run msbuild,
-                 so i need to specify the full path. -->
-            <_DotNetHostExecutableName>$(MSBuildExtensionsPath)/../../dotnet</_DotNetHostExecutableName>
-            <_DotNetHostExecutableName Condition=" '$(OS)' == 'Windows_NT' ">$(_DotNetHostExecutableName).exe</_DotNetHostExecutableName>
         </PropertyGroup>
 
         <Fsc  BaseAddress="$(BaseAddress)"
