@@ -13,10 +13,10 @@ namespace NetcoreCliFsc.Tests
 {
     public class GivenThatIWantANewFSApp : TestBase
     {
-        [Theory]
-        [InlineData("console")]
-        [InlineData("lib")]
-        [InlineData("web")]
+        // [Theory]
+        // [InlineData("console")]
+        // [InlineData("lib")]
+        // [InlineData("web")]
         public void When_dotnet_build_is_invoked_Then_project_builds_without_warnings(string type)
         {
             var rootPath = Temp.CreateDirectory().Path;
