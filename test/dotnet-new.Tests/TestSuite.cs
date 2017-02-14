@@ -10,6 +10,8 @@ using Xunit;
 using FluentAssertions;
 using static System.Environment;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace NetcoreCliFsc.Tests
 {
     public static class TestSuite
