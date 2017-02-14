@@ -56,7 +56,7 @@ dotnet test -c $(Configuration) --logger trx
             Outputs="@(RestoreTestPackagesInput->'%(RelativeDir)/obj/project.assets.json');@(RestoreTestPackagesInput->'%(RelativeDir)/obj/%(Filename).csproj.nuget.g.props')">
         <!-- Restore test projects, if needed (with lock files up-to-date check) -->
 
-        <Exec Command='dotnet restore "%(RestoreTestPackagesInput.FullPath)" --packages "$(NuGetPackageRoot)" --no-cache -v n"' />
+        <Exec Command='dotnet restore %(RestoreTestPackagesInput.FullPath) --packages $(NuGetPackageRoot) --no-cache -v n' />
     </Target>
     
 
