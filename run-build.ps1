@@ -28,7 +28,12 @@ function Install-DotnetSdk([string] $sdkVersion)
     $sdkInstallScriptPath = ".dotnetsdk\dotnet_cli_install.ps1"
     Write-Host "Downloading sdk install script '$sdkInstallScriptUrl' to '$sdkInstallScriptPath'"
     New-Item "$RepoRoot\.dotnetsdk" -Type directory -ErrorAction Ignore
-    Invoke-WebRequest $sdkInstallScriptUrl -OutFile "$RepoRoot\$sdkInstallScriptPath"
+    try {
+      Invoke-WebRequest $sdkInstallScriptUrl -OutFile "$RepoRoot\$sdkInstallScriptPath"
+    } catch {
+      Write-Host "failed $_.Exception"
+      exit 1
+    }
 
     Write-Host "Running sdk install script..."
     ./.dotnetsdk/dotnet_cli_install.ps1 -InstallDir ".dotnetsdk\sdk-$sdkVersion" -Channel "preview" -version $sdkVersion
