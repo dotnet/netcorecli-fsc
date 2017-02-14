@@ -19,12 +19,12 @@ if($Help)
 #make path absolute
 $RepoRoot = "$PSScriptRoot"
 
-$sdkVersion = '1.0.0-rc3-004530'
+$sdkVersion = '1.0.0-rc4-004771'
 
 function Install-DotnetSdk([string] $sdkVersion)
 {
     Write-Host "# Install .NET Core Sdk versione '$sdkVersion'" -foregroundcolor "magenta"
-    $sdkInstallScriptUrl = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-rc3/scripts/obtain/dotnet-install.ps1"
+    $sdkInstallScriptUrl = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-rc4/scripts/obtain/dotnet-install.ps1"
     $sdkInstallScriptPath = ".dotnetsdk\dotnet_cli_install.ps1"
     Write-Host "Downloading sdk install script '$sdkInstallScriptUrl' to '$sdkInstallScriptPath'"
     New-Item "$RepoRoot\.dotnetsdk" -Type directory -ErrorAction Ignore
