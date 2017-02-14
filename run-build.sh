@@ -51,6 +51,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 REPOROOT="$DIR"
 
 ARCHITECTURE="x64"
+source "$REPOROOT/scripts/common/_prettyprint.sh"
 
 BUILD=1
 
@@ -133,6 +134,10 @@ args=($temp)
 
 # During xplat bootstrapping, disable HTTP parallelism to avoid fatal restore timeouts.
 export __INIT_TOOLS_RESTORE_ARGS="$__INIT_TOOLS_RESTORE_ARGS --disable-parallel"
+
+# Enable verbose VS Test Console logging
+export VSTEST_BUILD_TRACE=1
+export VSTEST_TRACE_BUILD=1
 
 DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
