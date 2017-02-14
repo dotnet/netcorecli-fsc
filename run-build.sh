@@ -145,7 +145,7 @@ if [ ! -d ".dotnetsdk" ]; then
     mkdir ".dotnetsdk"
 fi
 
-sdkInstallScriptUrl=https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-rc4/scripts/obtain/dotnet-install.sh
+sdkInstallScriptUrl=https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh
 sdkInstallScriptPath=$REPOROOT/.dotnetsdk/dotnet_cli_install.sh
 
 download $sdkInstallScriptUrl $sdkInstallScriptPath
