@@ -24,7 +24,7 @@ namespace NetcoreCliFsc.Tests
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
 
             test("dotnet")
-                .Execute($"new --lang fsharp --type {type}")
+                .Execute($"new {type} -lang F#")
                 .Should().Pass();
 
             test("dotnet")
