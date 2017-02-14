@@ -14,7 +14,7 @@
     <CLITargets Condition=" '$(CLITargets)' == '' ">Test</CLITargets>
 
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+    <RepoRoot>$(MSBuildThisFileDirectory.TrimEnd('\\').TrimEnd('/'))</RepoRoot>
 
     <CoreSetupChannel>preview</CoreSetupChannel>
     <SharedFrameworkName>Microsoft.NETCore.App</SharedFrameworkName>
@@ -39,5 +39,9 @@
 
   <Import Project="$(RepoRoot)/build/Build.targets" />
   <Import Project="$(RepoRoot)/build/Test.targets" />
+
+  <Target Name="Help">
+    <Message Text="See README.md" Importance="High" />
+  </Target>
 
 </Project>
