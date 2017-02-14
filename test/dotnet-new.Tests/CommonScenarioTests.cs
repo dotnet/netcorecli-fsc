@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.DotNet.Tools.Test.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,15 +10,28 @@ using Xunit;
 using FluentAssertions;
 using static System.Environment;
 
-namespace NetcoreCliFsc.DotNet.Tests
+namespace NetcoreCliFsc.Tests
 {
     public class CommonScenario : TestBase
     {
+        private static IEnumerable<string> RepoNugetConfigFeeds()
+        {
+            var doc = XDocument.Load(Path.Combine(RepoRoot, "NuGet.Config"));
+            return doc.Element("configuration")
+                      .Element("packageSources")
+                      .Elements("add")
+                      .Attributes("value")
+                      .Select(a => a.Value)
+                      .ToList();
+        }
+
         private static IEnumerable<string> NugetConfigSources
         {
             get 
-            { 
-                yield return "https://api.nuget.org/v3/index.json";
+            {
+                foreach (var feed in RepoNugetConfigFeeds())
+                    yield return feed;
+
                 var pkgsDir = Path.Combine(RepoRoot, "test", "packagesToTest");
                 if (Directory.Exists(pkgsDir))
                     yield return pkgsDir;
@@ -79,6 +93,31 @@ namespace NetcoreCliFsc.DotNet.Tests
         }
 
         [Fact]
+        public void TestAppWithArgs451()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("TestAppWithArgs-netfw", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            string rid = GetCurrentRID();
+
+            test("dotnet")
+                .Execute($"restore -r {rid} {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"build -r {rid} {LogArgs}")
+                .Should().Pass();
+
+            test(Path.Combine(rootPath, "bin", "Debug", "net451", "TestAppWithArgs.exe"))
+                .Execute($"arg1 arg2")
+                .Should().Pass();
+        }
+
+        [Fact]
         public void TestLibrary()
         {
             var rootPath = Temp.CreateDirectory().Path;
@@ -94,6 +133,57 @@ namespace NetcoreCliFsc.DotNet.Tests
 
             test("dotnet")
                 .Execute($"build {LogArgs}")
+                .Should().Pass();
+        }
+
+        [Fact]
+        public void TestMultipleLibraryInSameDir()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("TestLibrary", rootPath);
+            TestAssets.CopyDirTo("TestMultipleLibraryInSameDir", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore TestLibrary.fsproj {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"restore TestLibrary2.fsproj {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"build TestLibrary.fsproj {LogArgs}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"build TestLibrary2.fsproj {LogArgs}")
+                .Should().Pass();
+        }
+
+        [Fact(Skip = "https://github.com/dotnet/netcorecli-fsc/issues/70")]
+        public void TestLibraryCross()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("TestLibraryCross", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"build {LogArgs}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"pack {LogArgs}")
                 .Should().Pass();
         }
 

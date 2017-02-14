@@ -115,6 +115,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
                        $"File Name: {_commandResult.StartInfo.FileName}{Environment.NewLine}" +
                        $"Arguments: {_commandResult.StartInfo.Arguments}{Environment.NewLine}" +
                        $"Exit Code: {_commandResult.ExitCode}{Environment.NewLine}" +
+                       $"Working Directory: {_commandResult.StartInfo.WorkingDirectory}{Environment.NewLine}" +
                        $"StdOut:{Environment.NewLine}{_commandResult.StdOut}{Environment.NewLine}" +
                        $"StdErr:{Environment.NewLine}{_commandResult.StdErr}{Environment.NewLine}"; ;
         }

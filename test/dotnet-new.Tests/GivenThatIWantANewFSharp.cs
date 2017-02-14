@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 using FluentAssertions;
 
-namespace NetcoreCliFsc.DotNet.Tests
+namespace NetcoreCliFsc.Tests
 {
     public class GivenThatIWantANewFSApp : TestBase
     {

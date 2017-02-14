@@ -20,7 +20,7 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
 
             if (string.IsNullOrWhiteSpace(persistedRoot))
             {
-                Root = Path.Combine(Path.GetTempPath(), "DotnetCLITests");
+                Root = Path.Combine(Path.GetTempPath(), "NetcoreCliFscTests");
                 DoDispose = true;
             }
             else
