@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSharp.Compiler.Tools" Version="4.1.0-b696" PrivateAssets="Compile" />
+    <PackageReference Include="FSharp.Compiler.Tools" Version="4.1.0-b698" PrivateAssets="Compile" />
   </ItemGroup>
 
 </Project>
