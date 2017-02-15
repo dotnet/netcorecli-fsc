@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Compile Include="Program.fs" />
-    <EmbeddedResource Include="**\*.resx" />
   </ItemGroup>
 
   <ItemGroup>

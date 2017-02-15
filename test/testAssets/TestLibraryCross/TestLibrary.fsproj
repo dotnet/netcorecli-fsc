@@ -9,7 +9,6 @@
   <ItemGroup>
     <Compile Include="Helper2.fs" />
     <Compile Include="Helper.fs" />
-    <EmbeddedResource Include="**\*.resx" />
   </ItemGroup>
 
   <ItemGroup>
