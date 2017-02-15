@@ -99,6 +99,7 @@ this file.
             <DotnetCompileFscResponseLines Include="--out:$(_IntermediateOutputPathFull)$(TargetName)$(TargetExt)" />
 
             <DotnetCompileFscResponseLines Condition="'$(OutputType)' == 'Exe'"  Include="--emit-entry-point:True" />
+            <DotnetCompileFscResponseLines Condition="'$(GenerateDocumentationFile)' == 'true'" Include="--generate-xml-documentation:True" />
 
             <!--DOC: $(DefineConstants) is a string separated by ';' so let's convert to array-->
             <DefineConstantsArray Include="$(DefineConstants.Split(';'))" />
