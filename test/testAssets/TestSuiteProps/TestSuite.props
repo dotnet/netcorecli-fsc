@@ -1,11 +1,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup Condition=" '$(FSharpNETSdkVersion)' == '' ">
-    <FSharpNETSdkVersion>1.0.0-rc1-*</FSharpNETSdkVersion>
+    <FSharpNETSdkVersion>1.0.*</FSharpNETSdkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(FSharpCorePkgVersion)' == '' ">
-    <FSharpCorePkgVersion>4.1.0-b698</FSharpCorePkgVersion>
+    <FSharpCorePkgVersion>4.1.0</FSharpCorePkgVersion>
   </PropertyGroup>
 
 
