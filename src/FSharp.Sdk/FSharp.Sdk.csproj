@@ -8,7 +8,7 @@
     <PackageId>FSharp.Sdk</PackageId>
     <Authors>Enrico Sada</Authors>
     <Description>SDK for F# bundled inside .NET Core SDK</Description>
-    <PackageReleaseNotes>Compatible with .NET Core Sdk preview4</PackageReleaseNotes>
+    <PackageReleaseNotes>Compatible with .NET Core Sdk 1.0.0-rc4</PackageReleaseNotes>
     <PackageTags>f#;sdk;fsharp;msbuild</PackageTags>
     <PackageProjectUrl>https://github.com/dotnet/netcorecli-fsc</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
