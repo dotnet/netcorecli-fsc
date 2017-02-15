@@ -20,15 +20,15 @@
 
   <ItemGroup>
     <Content Include="Sdk/Sdk.targets">
-      <PackagePath>.</PackagePath>
+      <PackagePath>Sdk/Sdk.targets</PackagePath>
       <Pack>true</Pack>
     </Content>
     <Content Include="Sdk/Sdk.OnRestore.targets">
-      <PackagePath>.</PackagePath>
+      <PackagePath>Sdk/Sdk.OnRestore.targets</PackagePath>
       <Pack>true</Pack>
     </Content>
     <Content Include="Sdk/Sdk.props">
-      <PackagePath>.</PackagePath>
+      <PackagePath>Sdk/Sdk.props</PackagePath>
       <Pack>true</Pack>
     </Content>
   </ItemGroup>

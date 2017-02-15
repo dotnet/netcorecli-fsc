@@ -20,19 +20,19 @@
 
   <ItemGroup>
     <Content Include="build/FSharp.NET.Current.Sdk.targets">
-      <PackagePath>.</PackagePath>
+      <PackagePath>build/FSharp.NET.Current.Sdk.targets</PackagePath>
       <Pack>true</Pack>
     </Content>
     <Content Include="build/FSharp.NET.Core.Sdk.targets">
-      <PackagePath>.</PackagePath>
+      <PackagePath>build/FSharp.NET.Core.Sdk.targets</PackagePath>
       <Pack>true</Pack>
     </Content>
     <Content Include="build/FSharp.NET.Sdk.props">
-      <PackagePath>.</PackagePath>
+      <PackagePath>build/FSharp.NET.Sdk.props</PackagePath>
       <Pack>true</Pack>
     </Content>
-    <Content Include="buildCrossTargeting/FSharp.NET.CrossTargeting.Sdk.targets">
-      <PackagePath>.</PackagePath>
+    <Content Include="buildCrossTargeting/FSharp.NET.Sdk.targets">
+      <PackagePath>buildCrossTargeting/FSharp.NET.Sdk.targets</PackagePath>
       <Pack>true</Pack>
     </Content>
   </ItemGroup>

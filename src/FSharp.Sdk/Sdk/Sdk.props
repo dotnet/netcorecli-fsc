@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+
+    <!-- disable wilcard include of Compile items, file ordering is a feature -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+
+    <!-- project guid used by dotnet sln add -->
+    <DefaultProjectTypeGuid Condition=" '$(DefaultProjectTypeGuid)' == '' ">{F2A71F9B-5D33-465A-A702-920D77279786}</DefaultProjectTypeGuid>
   </PropertyGroup>
 
 </Project>
