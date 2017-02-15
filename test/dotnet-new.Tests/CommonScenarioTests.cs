@@ -122,7 +122,7 @@ namespace NetcoreCliFsc.Tests
                 .Should().Pass();
         }
 
-        [Fact(Skip = "https://github.com/dotnet/netcorecli-fsc/issues/70")]
+        [WindowsOnlyFact(Reason = ".NET 4.5.1 require an to install the SDK or a Targeting Pack for that framework version. No clue how to do that on non win Os")]
         public void TestLibraryCross()
         {
             var rootPath = Temp.CreateDirectory().Path;
