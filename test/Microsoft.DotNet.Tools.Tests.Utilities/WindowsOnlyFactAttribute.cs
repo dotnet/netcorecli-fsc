@@ -8,11 +8,14 @@ namespace Microsoft.DotNet.Tools.Test.Utilities
 {
     public class WindowsOnlyFactAttribute : FactAttribute
     {
+        public string Reason { get; set; }
+
         public WindowsOnlyFactAttribute()
         {
             if (RuntimeEnvironment.OperatingSystemPlatform != Platform.Windows)
             {
-                this.Skip = "This test requires windows to run";
+                this.Skip = "This test requires windows to run"
+                          + (string.IsNullOrEmpty(Reason)? "" : $". Why? {Reason}");
             }
         }
     }

@@ -49,7 +49,8 @@ namespace NetcoreCliFsc.Tests
                 .Should().Pass();
         }
 
-        [Fact]
+        [WindowsOnlyFact(Reason = ".NET 4.5.1 require an to install the SDK or a Targeting Pack for that framework version. No clue how to do that on non win Os")]
+        //TODO how to build .net app/lib in osx/unix? need mono? need mono on ci server?
         public void TestAppWithArgs451()
         {
             var rootPath = Temp.CreateDirectory().Path;
