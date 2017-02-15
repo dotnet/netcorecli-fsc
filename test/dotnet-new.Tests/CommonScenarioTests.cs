@@ -95,6 +95,29 @@ namespace NetcoreCliFsc.Tests
         }
 
         [Fact]
+        public void TestXmlDoc()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("TestLibrary", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            Assert.Equal(false, File.Exists(Path.Combine(rootPath, "doc.xml")));
+
+            test("dotnet")
+                .Execute($"build {LogArgs} /p:DocumentationFile=doc.xml")
+                .Should().Pass();
+
+            Assert.Equal(true, File.Exists(Path.Combine(rootPath, "doc.xml")));
+        }
+
+        [Fact]
         public void TestMultipleLibraryInSameDir()
         {
             var rootPath = Temp.CreateDirectory().Path;
