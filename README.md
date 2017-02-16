@@ -2,6 +2,10 @@
 
 F# and .NET Core SDK working together
 
+**NOTE** See [Wiki](https://github.com/dotnet/netcorecli-fsc/wiki) for a lot more info.
+
+See `examples` directory like [examples/rc4](https://github.com/dotnet/netcorecli-fsc/tree/master/examples/rc4) for version specific example of common projects (lib,console.xunit,web)
+
 This repo contains the sources for:
 
 - `FSharp.NET.Sdk`
@@ -30,7 +34,7 @@ The build script will download .NET Core Sdk if needed (installed is not the exa
 
 the `build` will also run test suite.
 
-See [[test/README.md]] for more info about test suite
+See [test/README.md](https://github.com/dotnet/netcorecli-fsc/blob/master/test/README.md) for more info about test suite
 
 
 [win-x64-badge]: https://ci2.dot.net/buildStatus/icon?job=dotnet_netcorecli-fsc/master/release_windows_nt_x64
