@@ -1,21 +1,23 @@
 # F\# and .NET Core SDK working together
 
-[![FSharp.NET.Sdk](https://img.shields.io/nuget/vpre/FSharp.NET.Sdk.svg?maxAge=2592000&label=FSharp.NET.Sdk%20nuget)](https://www.nuget.org/packages/FSharp.NET.Sdk)
+[![FSharp.NET.Sdk](https://img.shields.io/nuget/vpre/FSharp.NET.Sdk.svg?maxAge=2592000&label=FSharp.NET.Sdk%20nuget)][fsharp.net.sdk nupkg]
+[![Docs](https://img.shields.io/badge/docs-wiki-1faece.svg)][wiki]
+[![Slack](https://img.shields.io/badge/slack-%23dotnetcore%20channel%20in%20fsharp.org%20slack-E60256.svg)][slack]
 
-**NOTE** See [Wiki](https://github.com/dotnet/netcorecli-fsc/wiki) for a lot more info.
+**NOTE** See [Wiki][wiki] for a lot more info.
 
-Need more help? [#dotnetcore channel in fsharp.org slack](https://fsharp.slack.com/messages/dotnetcore/), see [info about signup](http://fsharp.org/guides/slack/)
+Need more help? [![Slack](https://img.shields.io/badge/slack-%23dotnetcore%20channel%20in%20fsharp.org%20slack-E60256.svg)][slack] see [info about signup](http://fsharp.org/guides/slack/)
 
 See `examples` directory like [examples/rc4](https://github.com/dotnet/netcorecli-fsc/tree/master/examples/rc4) for version specific example of common projects (lib,console.xunit,web)
 
 This repo contains the sources for nuget packages:
 
-- [FSharp.NET.Sdk](https://www.nuget.org/packages/FSharp.NET.Sdk/)
-- [FSharp.Sdk](https://www.nuget.org/packages/FSharp.Sdk/)
+- [FSharp.NET.Sdk][fsharp.net.sdk nupkg]
+- [FSharp.Sdk][fsharp.sdk nupkg]
 
 History also contains:
 
-- [dotnet-compile-fsc](https://www.nuget.org/packages/dotnet-compile-fsc/) for integration `project.json` based sdk (`preview2`, `preview2.1`)
+- [dotnet-compile-fsc][dotnet-compile-fsc nupkg] for integration `project.json` based sdk (`preview2`, `preview2.1`)
 
 
 | Windows x64 | Ubuntu x64 | OS X | RHEL 7.2 | Debian 8.2 | Fedora 23 | OpenSUSE 13.2 | CentOS 7.1 |
@@ -42,3 +44,10 @@ See [test/README.md](https://github.com/dotnet/netcorecli-fsc/blob/master/test/R
 [win-x64-badge]: https://ci2.dot.net/buildStatus/icon?job=dotnet_netcorecli-fsc/master/release_windows_nt_x64
 [ubuntu-x64-badge]: https://ci2.dot.net/buildStatus/icon?job=dotnet_netcorecli-fsc/master/release_ubuntu_x64
 [osx-x64-badge]: https://ci2.dot.net/buildStatus/icon?job=dotnet_netcorecli-fsc/master/release_osx_x64
+
+[slack]: https://fsharp.slack.com/messages/dotnetcore/
+[wiki]: https://github.com/dotnet/netcorecli-fsc/wiki
+
+[fsharp.net.sdk nupkg]: https://www.nuget.org/packages/FSharp.NET.Sdk
+[fsharp.sdk nupkg]: https://www.nuget.org/packages/FSharp.Sdk
+[dotnet-compile-fsc nupkg]: https://www.nuget.org/packages/dotnet-compile-fsc
