@@ -296,6 +296,7 @@ namespace NetcoreCliFsc.Tests
         {
             var rootPath = Temp.CreateDirectory().Path;
 
+            TestAssets.CopyDirTo("netcoreapp1.0/TestConsoleAppTemplate", rootPath);
             TestAssets.CopyDirTo("TestAppWithRes", rootPath);
             TestAssets.CopyDirTo("TestSuiteProps", rootPath);
 
@@ -310,6 +311,39 @@ namespace NetcoreCliFsc.Tests
                 .Should().Pass();
 
             var result = test("dotnet").ExecuteWithCapturedOutput($"run {LogArgs}");
+
+            result.Should().Pass();
+
+            Assert.NotNull(result.StdOut);
+            Assert.Equal("Hi!", result.StdOut.Trim());
+        }
+
+
+        [WindowsOnlyFact(Reason = ".NET 4.5.1 require an to install the SDK or a Targeting Pack for that framework version. No clue how to do that on non win Os")]
+        public void TestAppWithResNet451()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("net451/TestConsoleAppTemplate", rootPath);
+            TestAssets.CopyDirTo("TestAppWithRes", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            string rid = GetCurrentRID();
+
+            test("dotnet")
+                .Execute($"restore -r {rid} {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"build -r {rid} {LogArgs}")
+                .Should().Pass();
+
+
+            var result = 
+                test(Path.Combine(rootPath, "bin", "Debug", "net451", "ConsoleApp.exe"))
+                .ExecuteWithCapturedOutput("");
 
             result.Should().Pass();
 
