@@ -289,5 +289,33 @@ namespace NetcoreCliFsc.Tests
                 .Execute($"build {LogArgs}")
                 .Should().Pass();
         }
+
+
+        [Fact]
+        public void TestAppWithRes()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("TestAppWithRes", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"build {LogArgs}")
+                .Should().Pass();
+
+            var result = test("dotnet").ExecuteWithCapturedOutput($"run {LogArgs}");
+
+            result.Should().Pass();
+
+            Assert.NotNull(result.StdOut);
+            Assert.Equal("Hi!", result.StdOut.Trim());
+        }
+
     }
 }

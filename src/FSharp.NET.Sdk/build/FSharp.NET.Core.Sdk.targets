@@ -21,6 +21,8 @@ this file.
 
     <!--TODO error if FscTaskAssemblyPath is not defined-->
     <UsingTask TaskName="Fsc" AssemblyFile="$(FscTaskAssemblyPath)" />
+    <!--TODO add property CreateFSharpManifestResourceNameTaskAssemblyPath -->
+    <UsingTask TaskName="CreateFSharpManifestResourceName" AssemblyFile="$(FscTaskAssemblyPath)"/>
 
     <PropertyGroup>
         <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -52,18 +54,64 @@ this file.
         <_ExplicitReference Include="$(FrameworkPathOverride)\mscorlib.dll" />
     </ItemGroup>
 
-    <!--Required Tasks by .Common.target-->
-
+    <!--
+      The CreateManifestResourceNames target create the manifest resource names from the .RESX
+      files.
+      
+          [IN]
+          @(EmbeddedResource) - The list of EmbeddedResource items that have been pre-processed to add metadata about resource type
+                                Expected Metadata "Type" can either be "Resx" or "Non-Resx"
+          [OUT]
+          @(EmbeddedResource) - EmbeddedResource items with metadata         
+          
+      For F# applications the transformation is like:
+          Resources1.resx => Resources1 => Build into main assembly
+          SubFolder\Resources1.resx => SubFolder.Resources1 => Build into main assembly
+          Resources1.fr.resx => Resources1.fr => Build into satellite assembly
+          Resources1.notaculture.resx => Resources1.notaculture => Build into main assembly
+      For other project systems, this transformation may be different.
+      -->
+    <!-- target CreateManifestResourceNames is required by .Common.target-->
     <PropertyGroup>
         <CreateManifestResourceNamesDependsOn></CreateManifestResourceNamesDependsOn>
     </PropertyGroup>
     <Target
         Name="CreateManifestResourceNames"
-        Condition="'@(EmbeddedResource)' != ''"
+        Condition=" '@(EmbeddedResource)' != '' "
         DependsOnTargets="$(CreateManifestResourceNamesDependsOn)"
         >
 
-        <Message Text="Prova CreateManifestResourceNames" />
+        <ItemGroup>
+            <_Temporary Remove="@(_Temporary)" />
+        </ItemGroup>
+
+        <!-- Create manifest names for culture and non-culture Resx files, and for non-culture Non-Resx resources -->
+        <CreateFSharpManifestResourceName
+              ResourceFiles="@(EmbeddedResource)"
+              RootNamespace="$(RootNamespace)"
+              Condition=" '%(EmbeddedResource.ManifestResourceName)' == '' and ( '%(EmbeddedResource.WithCulture)' == 'false' or '%(EmbeddedResource.Type)' == 'Resx' ) ">
+
+            <Output TaskParameter="ResourceFilesWithManifestResourceNames" ItemName="_Temporary" />
+
+        </CreateFSharpManifestResourceName>
+
+        <!-- Create manifest names for all culture non-resx resources -->
+        <CreateFSharpManifestResourceName
+              ResourceFiles="@(EmbeddedResource)"
+              RootNamespace="$(RootNamespace)"
+              PrependCultureAsDirectory="false"
+              Condition=" '%(EmbeddedResource.ManifestResourceName)' == '' and '%(EmbeddedResource.WithCulture)' == 'true' and '%(EmbeddedResource.Type)' == 'Non-Resx' ">
+
+            <Output TaskParameter="ResourceFilesWithManifestResourceNames" ItemName="_Temporary" />
+
+        </CreateFSharpManifestResourceName>
+
+        <ItemGroup>
+            <EmbeddedResource Remove="@(EmbeddedResource)" Condition=" '%(EmbeddedResource.ManifestResourceName)' == '' "/>
+            <EmbeddedResource Include="@(_Temporary)" />
+            <_Temporary Remove="@(_Temporary)" />
+        </ItemGroup>
+
     </Target>
 
   <Target
