@@ -30,7 +30,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <FSharpNETSdkVersion>1.0.0</FSharpNETSdkVersion>
+    <FSharpNETSdkVersion>1.0.1</FSharpNETSdkVersion>
     <FSharpSdkVersion>1.0.0</FSharpSdkVersion>
   </PropertyGroup>
 
