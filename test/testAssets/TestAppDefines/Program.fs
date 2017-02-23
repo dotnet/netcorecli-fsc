@@ -8,19 +8,28 @@ open System.Diagnostics
 
 module Program =
 
-    [<EntryPoint>]
-    let main _ =
-        let configurationName =
+    let configurationName =
 #if RELEASE
-            "RELEASE"
+        "RELEASE"
 #else
     #if DEBUG
-            "DEBUG"
+        "DEBUG"
     #else
-            "UNKNOWN"
+        "UNKNOWN"
     #endif
 #endif
 
+    let frameworkDefine =
+#if NETCOREAPP1_0
+        "NETCOREAPP1_0"
+#else
+        "UNKNOWN"
+#endif
+
+    [<EntryPoint>]
+    let main _ =
+
         printfn "CONF: '%s'" configurationName
+        printfn "TFM: '%s'" frameworkDefine
 
         0

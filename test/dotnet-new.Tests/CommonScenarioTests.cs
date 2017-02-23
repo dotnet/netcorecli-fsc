@@ -120,6 +120,32 @@ namespace NetcoreCliFsc.Tests
         }
 
         [Fact]
+        public void TestImplicitFrameworkDefines()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("TestAppDefines", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            test("dotnet")
+                .Execute($"build {LogArgs}")
+                .Should().Pass();
+
+            var result = test("dotnet").ExecuteWithCapturedOutput($"run {LogArgs}");
+
+            result.Should().Pass();
+
+            Assert.NotNull(result.StdOut);
+            Assert.Contains($"TFM: 'NETCOREAPP1_0'", result.StdOut.Trim());
+        }
+
+        [Fact]
         public void TestImplicitConfigurationDefines()
         {
             var rootPath = Temp.CreateDirectory().Path;
