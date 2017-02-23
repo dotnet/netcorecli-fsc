@@ -120,6 +120,40 @@ namespace NetcoreCliFsc.Tests
         }
 
         [Fact]
+        public void TestImplicitConfigurationDefines()
+        {
+            var rootPath = Temp.CreateDirectory().Path;
+
+            TestAssets.CopyDirTo("TestAppDefines", rootPath);
+            TestAssets.CopyDirTo("TestSuiteProps", rootPath);
+
+            Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
+
+            test("dotnet")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Should().Pass();
+
+            var configurations = new Dictionary<string,string> { 
+                { "release", "RELEASE" },
+                { "debug", "DEBUG" },
+            };
+
+            foreach (var kv in configurations)
+            {
+                test("dotnet")
+                    .Execute($"build {LogArgs} -c {kv.Key}")
+                    .Should().Pass();
+
+                var result = test("dotnet").ExecuteWithCapturedOutput($"run -c {kv.Key} {LogArgs}");
+
+                result.Should().Pass();
+
+                Assert.NotNull(result.StdOut);
+                Assert.Contains($"CONF: '{kv.Value}'", result.StdOut.Trim());
+            }
+        }
+
+        [Fact]
         public void TestMultipleLibraryInSameDir()
         {
             var rootPath = Temp.CreateDirectory().Path;
