@@ -151,7 +151,7 @@ this file.
                  so i need to specify the full path. -->
             <_DotNetHostExecutableName>dotnet</_DotNetHostExecutableName>
             <_DotNetHostExecutableName Condition=" '$(OS)' == 'Windows_NT' ">$(_DotNetHostExecutableName).exe</_DotNetHostExecutableName>
-            <_DotNetHostExecutableDirectory>$(MSBuildExtensionsPath)/../..</_DotNetHostExecutableDirectory>
+            <_DotNetHostExecutableDirectory>$(MSBuildSDKsPath)/../../..</_DotNetHostExecutableDirectory>
             <_DotNetHostExecutablePath>$(_DotNetHostExecutableDirectory)/$(_DotNetHostExecutableName)</_DotNetHostExecutablePath>
         </PropertyGroup>
 
