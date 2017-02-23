@@ -124,6 +124,7 @@ namespace NetcoreCliFsc.Tests
         {
             var rootPath = Temp.CreateDirectory().Path;
 
+            TestAssets.CopyDirTo("netcoreapp1.0/TestConsoleAppTemplate", rootPath);
             TestAssets.CopyDirTo("TestAppDefines", rootPath);
             TestAssets.CopyDirTo("TestSuiteProps", rootPath);
 
@@ -150,6 +151,7 @@ namespace NetcoreCliFsc.Tests
         {
             var rootPath = Temp.CreateDirectory().Path;
 
+            TestAssets.CopyDirTo("netcoreapp1.0/TestConsoleAppTemplate", rootPath);
             TestAssets.CopyDirTo("TestAppDefines", rootPath);
             TestAssets.CopyDirTo("TestSuiteProps", rootPath);
 
