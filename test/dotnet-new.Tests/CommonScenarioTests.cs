@@ -31,6 +31,7 @@ namespace NetcoreCliFsc.Tests
         {
             var rootPath = Temp.CreateDirectory().Path;
 
+            TestAssets.CopyDirTo("netcoreapp1.0/TestConsoleAppTemplate", rootPath);
             TestAssets.CopyDirTo("TestAppWithArgs", rootPath);
             TestAssets.CopyDirTo("TestSuiteProps", rootPath);
 
@@ -55,7 +56,8 @@ namespace NetcoreCliFsc.Tests
         {
             var rootPath = Temp.CreateDirectory().Path;
 
-            TestAssets.CopyDirTo("TestAppWithArgs-netfw", rootPath);
+            TestAssets.CopyDirTo("net451/TestConsoleAppTemplate", rootPath);
+            TestAssets.CopyDirTo("TestAppWithArgs", rootPath);
             TestAssets.CopyDirTo("TestSuiteProps", rootPath);
 
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
@@ -70,7 +72,7 @@ namespace NetcoreCliFsc.Tests
                 .Execute($"build -r {rid} {LogArgs}")
                 .Should().Pass();
 
-            test(Path.Combine(rootPath, "bin", "Debug", "net451", "TestAppWithArgs.exe"))
+            test(Path.Combine(rootPath, "bin", "Debug", "net451", "ConsoleApp.exe"))
                 .Execute($"arg1 arg2")
                 .Should().Pass();
         }
