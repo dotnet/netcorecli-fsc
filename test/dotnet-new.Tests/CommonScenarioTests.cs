@@ -72,7 +72,7 @@ namespace NetcoreCliFsc.Tests
                 .Execute($"build -r {rid} {LogArgs}")
                 .Should().Pass();
 
-            test(Path.Combine(rootPath, "bin", "Debug", "net451", "ConsoleApp.exe"))
+            test(Path.Combine(rootPath, "bin", "Debug", "net451", rid, "ConsoleApp.exe"))
                 .Execute($"arg1 arg2")
                 .Should().Pass();
         }
@@ -406,7 +406,7 @@ namespace NetcoreCliFsc.Tests
 
 
             var result = 
-                test(Path.Combine(rootPath, "bin", "Debug", "net451", "ConsoleApp.exe"))
+                test(Path.Combine(rootPath, "bin", "Debug", "net451", rid, "ConsoleApp.exe"))
                 .ExecuteWithCapturedOutput("");
 
             result.Should().Pass();

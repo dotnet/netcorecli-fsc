@@ -30,7 +30,7 @@ After `build`
 
 Use env var `DOTNET_TEST_PRESERVE_TEMP` to preserve temporary test directories.
 
-Tests are built in temporary directories under `%TEMP%/NetcoreCliFscTests` directory
+Tests are built in temporary directories under `%TEMP%\NetcoreCliFscTests` directory
 
 From `test/dotnet-new.Tests` :
 
