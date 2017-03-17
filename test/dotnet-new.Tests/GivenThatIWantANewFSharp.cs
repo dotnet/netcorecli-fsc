@@ -13,11 +13,13 @@ namespace NetcoreCliFsc.Tests
 {
     public class GivenThatIWantANewFSApp : TestBase
     {
-        // [Theory]
-        // [InlineData("console")]
-        // [InlineData("lib")]
-        // [InlineData("web")]
-        public void When_dotnet_build_is_invoked_Then_project_builds_without_warnings(string type)
+        [Theory]
+        [InlineData("console")]
+        [InlineData("lib")]
+        [InlineData("mvc")]
+        [InlineData("mstest")]
+        [InlineData("xunit")]
+        public void Check_default_templates(string type)
         {
             var rootPath = Temp.CreateDirectory().Path;
 
@@ -41,7 +43,15 @@ namespace NetcoreCliFsc.Tests
                     .Execute($"run {LogArgs}")
                     .Should().Pass();
             }
+
+            if (type == "mstest" || type == "xunit")
+            {
+                test("dotnet")
+                    .Execute($"test {LogArgs}")
+                    .Should().Pass();
+            }
         }
+
 
         /*
         [Fact]

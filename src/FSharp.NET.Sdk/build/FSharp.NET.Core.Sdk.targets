@@ -207,7 +207,10 @@ this file.
               HighEntropyVA="$(HighEntropyVA)"
               TargetProfile="$(TargetProfile)"
               DotnetFscCompilerPath="$(_FscTask_DotnetFscCompilerPath)"
-        />
+              SkipCompilerExecution="$(SkipCompilerExecution)"
+              ProvideCommandLineArgs="$(ProvideCommandLineArgs)">
+          <Output TaskParameter="CommandLineArgs" ItemName="FscCommandLineArgs" />
+        </Fsc>
 
     </Target>
 
