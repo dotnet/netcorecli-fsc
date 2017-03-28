@@ -43,7 +43,7 @@ namespace NetcoreCliFsc.Tests
             }
         }
 
-        private static string NugetPackagesDir => Path.Combine(TestBase.RepoRoot, "test", "packages");
+        public static string NugetPackagesDir => Path.Combine(TestBase.RepoRoot, "test", "packages");
 
         public static string RestoreSourcesArgs(IEnumerable<string> sources)
         {
@@ -53,5 +53,23 @@ namespace NetcoreCliFsc.Tests
         public static string RestoreDefaultArgs => $"--no-cache {LogArgs} --packages \"{NugetPackagesDir}\"";
 
         public static string LogArgs => "-v n";
+
+        public static MSBuildHostTypesOnly MSBuildHostTypesOnly
+        {
+            get 
+            {
+                var msbuildHost = 
+                    (GetEnvironmentVariable("TEST_SUITE_MSBUILD_HOST_ONLY") ?? "")
+                    .ToUpper()
+                    .Split(';');
+                
+                var result = MSBuildHostTypesOnly.Core;
+                if (msbuildHost.Contains("MSBUILD"))
+                    result = result | MSBuildHostTypesOnly.MSBuild;
+                if (msbuildHost.Contains("MONO"))
+                    result = result | MSBuildHostTypesOnly.Mono;
+                return result;
+            }
+        } 
     }
 }
