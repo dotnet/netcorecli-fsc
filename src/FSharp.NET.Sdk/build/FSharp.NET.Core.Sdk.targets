@@ -155,13 +155,13 @@ this file.
             <_DotNetHostExecutablePath>$(_DotNetHostExecutableDirectory)/$(_DotNetHostExecutableName)</_DotNetHostExecutablePath>
         </PropertyGroup>
 
-        <PropertyGroup Condition=" '$(DontRunFscWithDotnet)' == '' ">
+        <PropertyGroup Condition=" $(FscToolExe.EndsWith('.exe')) == false ">
             <_FscTask_FscToolExe>$(_DotNetHostExecutableName)</_FscTask_FscToolExe>
             <_FscTask_FscToolPath>$(_DotNetHostExecutableDirectory)</_FscTask_FscToolPath>
             <_FscTask_DotnetFscCompilerPath> "$(FscToolPath)/$(FscToolExe)"</_FscTask_DotnetFscCompilerPath>
         </PropertyGroup>
 
-        <PropertyGroup Condition=" '$(DontRunFscWithDotnet)' != '' "> <!-- check fsc extension? -->
+        <PropertyGroup Condition=" $(FscToolExe.EndsWith('.exe')) == true ">
             <_FscTask_FscToolExe>$(FscToolExe)</_FscTask_FscToolExe>
             <_FscTask_FscToolPath>$(FscToolPath)</_FscTask_FscToolPath>
             <_FscTask_DotnetFscCompilerPath></_FscTask_DotnetFscCompilerPath>
