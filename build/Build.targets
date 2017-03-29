@@ -3,26 +3,25 @@
     <Target Name="Package"
             DependsOnTargets="RestoreSrcPackages">
 
-        <Exec Command='dotnet pack --no-build --output $(ArtifactsDir)/nupkgs /p:Version=$(FSharpSdkVersion)' 
-              WorkingDirectory="$(RepoRoot)/src/FSharp.Sdk"/>
+        <Exec Command='dotnet pack $(RepoRoot)/src/FSharp.Sdk/FSharp.Sdk.proj --output $(ArtifactsDir)/nupkgs /p:Version=$(FSharpSdkVersion)' />
 
-        <Exec Command='dotnet pack --no-build --output $(ArtifactsDir)/nupkgs /p:Version=$(FSharpNETSdkVersion)' 
-              WorkingDirectory="$(RepoRoot)/src/FSharp.NET.Sdk"/>
+        <Exec Command='dotnet pack $(RepoRoot)/src/FSharp.NET.Sdk/FSharp.NET.Sdk.proj --output $(ArtifactsDir)/nupkgs /p:Version=$(FSharpNETSdkVersion)' />
+
     </Target>
 
     <Target Name="SetupRestoreSrcPackagesInputsOutputs">
         <!-- List of test projects to restore -->
 
         <ItemGroup>
-            <RestoreSrcPackagesInput Include="$(RepoRoot)/src/FSharp.NET.Sdk/FSharp.NET.Sdk.csproj" />
-            <RestoreSrcPackagesInput Include="$(RepoRoot)/src/FSharp.Sdk/FSharp.Sdk.csproj" />
+            <RestoreSrcPackagesInput Include="$(RepoRoot)/src/FSharp.NET.Sdk/FSharp.NET.Sdk.proj" />
+            <RestoreSrcPackagesInput Include="$(RepoRoot)/src/FSharp.Sdk/FSharp.Sdk.proj" />
         </ItemGroup>
     </Target>
 
     <Target Name="RestoreSrcPackages"
             DependsOnTargets="SetupRestoreSrcPackagesInputsOutputs"
             Inputs="@(RestoreSrcPackagesInput)"
-            Outputs="@(RestoreSrcPackagesInput->'%(RelativeDir)/obj/project.assets.json');@(RestoreSrcPackagesInput->'%(RelativeDir)/obj/%(Filename).csproj.nuget.g.props')">
+            Outputs="@(RestoreSrcPackagesInput->'%(RelativeDir)/obj/project.assets.json');@(RestoreSrcPackagesInput->'%(RelativeDir)/obj/%(Filename)%(Extension).nuget.g.props')">
         <!-- Restore test projects, if needed (with lock files up-to-date check) -->
 
         <Exec Command='dotnet restore %(RestoreSrcPackagesInput.FullPath) --packages $(NuGetPackageRoot) --no-cache -v n' />

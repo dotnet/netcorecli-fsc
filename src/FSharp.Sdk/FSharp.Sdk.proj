@@ -16,6 +16,8 @@
 
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <PackProjectInputFile>$(MSBuildProjectFullPath)</PackProjectInputFile>
+    <NoBuild>true</NoBuild>
   </PropertyGroup>
 
   <ItemGroup>
