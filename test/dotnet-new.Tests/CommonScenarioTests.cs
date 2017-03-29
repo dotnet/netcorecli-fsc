@@ -62,18 +62,16 @@ namespace NetcoreCliFsc.Tests
 
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
 
-            string rid = GetCurrentRID();
-
             test("dotnet")
-                .Execute($"restore -r {rid} {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
             test("dotnet")
-                .Execute($"build -r {rid} {LogArgs}")
+                .Execute($"build {LogArgs}")
                 .Should().Pass();
 
-            test(Path.Combine(rootPath, "bin", "Debug", "net451", rid, "ConsoleApp.exe"))
-                .Execute($"arg1 arg2")
+            test("dotnet")
+                .Execute($"run {LogArgs}")
                 .Should().Pass();
         }
 
@@ -311,15 +309,14 @@ namespace NetcoreCliFsc.Tests
 
             Func<string,TestCommand> test = n => new TestCommand(n) { WorkingDirectory = rootPath };
 
-            string rid = GetCurrentRID();
             string msbuildArgs = $"/p:AssemblyName={name} " + (fail? "/p:Fail=true" : "");
 
             test("dotnet")
-                .Execute($"restore -r {rid} {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()} {msbuildArgs}")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()} {msbuildArgs}")
                 .Should().Pass();
             
             test("dotnet")
-                .Execute($"publish -r {rid} -o \"{intoDir}\" {msbuildArgs}")
+                .Execute($"publish -o \"{intoDir}\" {msbuildArgs}")
                 .Should().Pass();
         }
 
@@ -394,20 +391,15 @@ namespace NetcoreCliFsc.Tests
 
             Func<string,TestCommand> test = name => new TestCommand(name) { WorkingDirectory = rootPath };
 
-            string rid = GetCurrentRID();
-
             test("dotnet")
-                .Execute($"restore -r {rid} {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
+                .Execute($"restore {RestoreDefaultArgs} {RestoreSourcesArgs(NugetConfigSources)} {RestoreProps()}")
                 .Should().Pass();
 
             test("dotnet")
-                .Execute($"build -r {rid} {LogArgs}")
+                .Execute($"build {LogArgs}")
                 .Should().Pass();
 
-
-            var result = 
-                test(Path.Combine(rootPath, "bin", "Debug", "net451", rid, "ConsoleApp.exe"))
-                .ExecuteWithCapturedOutput("");
+            var result = test("dotnet").ExecuteWithCapturedOutput($"run {LogArgs}");
 
             result.Should().Pass();
 
