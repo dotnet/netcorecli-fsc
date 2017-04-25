@@ -18,12 +18,19 @@ namespace NetcoreCliFsc.Tests
     {
         private static IEnumerable<string> RepoNugetConfigFeeds()
         {
+            Func<string,string> fixPath = path => {
+                if (path.ToLower().StartsWith("http"))
+                    return path;
+                else
+                    return Path.Combine(TestBase.RepoRoot, path);
+            };
             var doc = XDocument.Load(Path.Combine(TestBase.RepoRoot, "NuGet.Config"));
             return doc.Element("configuration")
                       .Element("packageSources")
                       .Elements("add")
                       .Attributes("value")
                       .Select(a => a.Value)
+                      .Select(fixPath)
                       .ToList();
         }
 
