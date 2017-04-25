@@ -54,3 +54,14 @@ To specify what package version to test, use env var:
 - `TEST_SUITE_FSHARP_CORE_PKG_VERSION` =>  `FSharp.Core` pkg version
 
 If not set, default versions are specified in [test/testAssets/TestSuiteProps/TestSuiteProps.props](test/testAssets/TestSuiteProps/TestSuiteProps.props)
+
+## Choose MSBuild host types
+
+Use env var `TEST_SUITE_MSBUILD_HOST_TYPES` to run other test for different msbuild host types
+
+Msbuild Core test always run
+
+- `MSBUILD` to run also MSBuild (.NET Full), require `msbuild.exe` in `PATH`
+- `MONO` to run also Mono, require `mono` in `PATH`
+
+to specify multiple, use `;` separator, so `MSBUILD;MONO` for example

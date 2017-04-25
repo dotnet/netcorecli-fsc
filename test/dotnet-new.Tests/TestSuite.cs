@@ -66,7 +66,7 @@ namespace NetcoreCliFsc.Tests
             get 
             {
                 var msbuildHost = 
-                    (GetEnvironmentVariable("TEST_SUITE_MSBUILD_HOST_ONLY") ?? "")
+                    (GetEnvironmentVariable("TEST_SUITE_MSBUILD_HOST_TYPES") ?? "")
                     .ToUpper()
                     .Split(';');
                 
