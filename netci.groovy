@@ -8,7 +8,7 @@ import jobs.generation.Utilities;
 def project = GithubProject
 def branch = GithubBranchName
 
-def platformList = ['Debian8.2:x64:Debug', 'Ubuntu:x64:Release', 'Ubuntu16.04:x64:Debug', 'OSX:x64:Release', 'Windows_NT:x64:Release', 'Windows_NT:x86:Debug', 'RHEL7.2:x64:Release', 'CentOS7.1:x64:Debug', 'Fedora23:x64:Debug', 'OpenSUSE13.2:x64:Debug']
+def platformList = ['Debian8.2:x64:Debug', 'Ubuntu:x64:Release', 'Ubuntu14.04MonoLatest:x64:Release', 'Ubuntu16.04:x64:Debug', 'OSX:x64:Release', 'Windows_NT:x64:Release', 'Windows_NT:x86:Debug', 'RHEL7.2:x64:Release', 'CentOS7.1:x64:Debug', 'Fedora23:x64:Debug', 'OpenSUSE13.2:x64:Debug']
 
 def static getBuildJobName(def configuration, def os, def architecture) {
     return configuration.toLowerCase() + '_' + os.toLowerCase() + '_' + architecture.toLowerCase()
@@ -31,7 +31,7 @@ def static getBuildJobName(def configuration, def os, def architecture) {
         else if (os == 'Windows_2016') {
             buildCommand = ".\\build.cmd -Configuration ${configuration} -Architecture ${architecture} -RunInstallerTestsInDocker -Targets Default"
         }
-        else if (os == 'Ubuntu') {
+        else if (os == 'Ubuntu' || os == "Ubuntu14.04MonoLatest") {
             buildCommand = "./build.sh --skip-prereqs --configuration ${configuration} --docker ubuntu.14.04 --targets Default"
         }
         else {
@@ -53,7 +53,12 @@ def static getBuildJobName(def configuration, def os, def architecture) {
             }
         }
 
-        Utilities.setMachineAffinity(newJob, os, 'latest-or-auto')
+        if (os == "Ubuntu14.04MonoLatest") {
+            Utilities.setMachineAffinity(newJob, 'Ubuntu14.04', 'latest-mono-devel')
+        }
+        else {
+            Utilities.setMachineAffinity(newJob, os, 'latest-or-auto')
+        }
         Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}")
         //Utilities.addXUnitDotNETResults(newJob, '**/*-testResults.xml', true)
         Utilities.addGithubPRTriggerForBranch(newJob, branch, "${os} ${architecture} ${configuration} Build")
