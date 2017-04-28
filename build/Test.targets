@@ -24,7 +24,7 @@ dotnet test -c $(Configuration) --logger trx
         </PropertyGroup>
 
         <ItemGroup>
-            <_NupkgsToTest Include="$(ArtifactsDir)/nupkgs/FSharp.Sdk.$(FSharpSdkVersionToTest).nupkg" />
+            <_NupkgsToTest Include="$(ArtifactsDir)/nupkgs/FSharp.NET.Sdk.$(FSharpSdkVersionToTest).nupkg" />
             <_NupkgsToTest Include="$(ArtifactsDir)/nupkgs/FSharp.NET.Sdk.$(FSharpNETSdkVersionToTest).nupkg" />
         </ItemGroup>
 
@@ -35,7 +35,6 @@ dotnet test -c $(Configuration) --logger trx
               DestinationFolder="$(RepoRoot)/test/packagesToTest" />
 
         <!--Remove nupkgs from test suite cache-->
-        <RemoveDir Directories="$(RepoRoot)/test/packages/fsharp.sdk" />
         <RemoveDir Directories="$(RepoRoot)/test/packages/fsharp.net.sdk" />
         <RemoveDir Directories="$(RepoRoot)/test/packages/dotnet-compile-fsc" />
     </Target>
