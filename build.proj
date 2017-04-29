@@ -30,8 +30,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <FSharpNETSdkVersion>1.0.3</FSharpNETSdkVersion>
-    <FSharpSdkVersion>$(FSharpNETSdkVersion)-bundled</FSharpSdkVersion>
+    <FSharpNETSdkVersion>1.0.4-rc3-0001</FSharpNETSdkVersion>
+    <FSharpSdkVersion>1.0.4-bundled-0001</FSharpSdkVersion>
   </PropertyGroup>
 
   <Target Name="BuildTheWholeCli"
