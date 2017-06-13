@@ -5,7 +5,8 @@
 [![Slack](https://img.shields.io/badge/slack-%23dotnetcore%20channel%20in%20fsharp.org%20slack-E60256.svg)][slack]
 
 
-**NOTE** See [Wiki][wiki] for a lot more info.
+**<h2>See [Wiki][wiki] for a lot more info.</h2>**
+
 
 Need more help? [![Slack](https://img.shields.io/badge/slack-%23dotnetcore%20channel%20in%20fsharp.org%20slack-E60256.svg)][slack] see [info about signup](http://fsharp.org/guides/slack/)
 
