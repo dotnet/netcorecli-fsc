@@ -9,10 +9,6 @@
 
 Need more help? [![Slack](https://img.shields.io/badge/slack-%23dotnetcore%20channel%20in%20fsharp.org%20slack-E60256.svg)][slack] see [info about signup](http://fsharp.org/guides/slack/)
 
-
-See `examples` directory like [examples/rc4](https://github.com/dotnet/netcorecli-fsc/tree/master/examples/rc4) for version specific example of common projects (lib,console.xunit,web)
-
-
 This repo contains the sources for nuget packages:
 
 - [FSharp.NET.Sdk][fsharp.net.sdk nupkg]
