@@ -1,4 +1,10 @@
-# F\# and .NET Core SDK working together
+# This repository is now archived
+
+F# is now included by default in the .NET Core SDK. Creating a new F# project on .NET Core is documented in the [Get Started](https://docs.microsoft.com/dotnet/fsharp/get-started/get-started-command-line) article in the .NET docs.
+
+The rest of this README is kept for historical purposes.
+
+## F# and .NET Core SDK working together 
 
 [![FSharp.NET.Sdk](https://img.shields.io/nuget/vpre/FSharp.NET.Sdk.svg?maxAge=2592000&label=FSharp.NET.Sdk%20nuget)][fsharp.net.sdk nupkg]
 [![Docs](https://img.shields.io/badge/docs-wiki-1faece.svg)][wiki]
